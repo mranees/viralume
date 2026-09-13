@@ -25,8 +25,4 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 9000
 
-CMD ["php-fpm"]
-
-COPY docker/crontab /etc/crontabs/root
-
-CMD ["crond", "-f", "-l", "2"]
+CMD ["sh", "-c", "php-fpm & crond -f -l 2"]
