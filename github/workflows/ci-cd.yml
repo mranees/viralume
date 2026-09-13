@@ -1,0 +1,153 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ═══════════════ CI: Tests ═══════════════
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: laravel
+          MYSQL_ROOT_PASSWORD: secret
+          DB_USERNAME: root
+          DB_PASSWORD: secret
+        ports:
+          - 3307:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo, pdo_mysql, redis, zip, bcmath
+          coverage: none
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Generate app key
+        run: php artisan key:generate
+
+      - name: Run linting (Laravel Pint)
+        run: ./vendor/bin/pint --test
+
+      - name: Run static analysis (PHPStan)
+        run: ./vendor/bin/phpstan analyse --memory-limit=1G
+
+      - name: Run migrations
+        env:
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: laravel
+          DB_USERNAME: root
+          DB_PASSWORD: secret
+        run: php artisan migrate --force
+
+      - name: Run tests
+        env:
+          DB_HOST: 127.0.0.1
+          DB_DATABASE: laravel
+          DB_USERNAME: root
+          DB_PASSWORD: secret
+          REDIS_HOST: 127.0.0.1
+        run: php artisan test --parallel
+
+  # ═══════════════ CI: Build Docker Image ═══════════════
+  build:
+    needs: test   # ما يشتغلش إلا لو الـ tests نجحت
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'   # بس على main
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: laravel-app
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+  # ═══════════════ CD: Deploy to ECS ═══════════════
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Run database migrations
+        run: |
+          aws ecs run-task \
+            --cluster laravel-cluster \
+            --task-definition laravel-migrate-task \
+            --launch-type FARGATE \
+            --network-configuration "awsvpcConfiguration={subnets=[subnet-xxxx],securityGroups=[sg-xxxx]}"
+
+      - name: Update ECS service (web)
+        run: |
+          aws ecs update-service \
+            --cluster laravel-cluster \
+            --service laravel-web-service \
+            --force-new-deployment
+
+      - name: Update ECS service (queue workers)
+        run: |
+          aws ecs update-service \
+            --cluster laravel-cluster \
+            --service laravel-queue-service \
+            --force-new-deployment
+
+      - name: Wait for deployment to stabilize
+        run: |
+          aws ecs wait services-stable \
+            --cluster laravel-cluster \
+            --services laravel-web-service laravel-queue-service

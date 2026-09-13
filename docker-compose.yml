@@ -1,0 +1,202 @@
+services:
+  # ─── Load Balancer ───
+  nginx-lb:
+    image: nginx:alpine
+    container_name: nginx-lb
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/nginx-lb.conf:/etc/nginx/conf.d/default.conf
+      - .:/var/www/html
+    depends_on:
+      - app1
+      - app2
+      - app3
+
+  # ─── App Servers (3 نسخ - horizontal scaling) ───
+  app1:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: app1
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=mysql-primary
+      - DB_READ_HOST=mysql-replica
+      - DB_PORT=3307
+      - DB_DATABASE=laravel
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+      - SESSION_DRIVER=redis
+      - CACHE_STORE=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - FILESYSTEM_DISK=s3
+      - AWS_ENDPOINT=http://minio:9000
+    depends_on:
+      - mysql-primary
+      - redis
+
+  app2:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: app2
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=mysql-primary
+      - DB_READ_HOST=mysql-replica
+      - DB_PORT=3307
+      - DB_DATABASE=laravel
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+      - SESSION_DRIVER=redis
+      - CACHE_STORE=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - FILESYSTEM_DISK=s3
+      - AWS_ENDPOINT=http://minio:9000
+    depends_on:
+      - mysql-primary
+      - redis
+
+  app3:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: app3
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=mysql-primary
+      - DB_READ_HOST=mysql-replica
+      - DB_PORT=3307
+      - DB_DATABASE=laravel
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+      - SESSION_DRIVER=redis
+      - CACHE_STORE=redis
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - FILESYSTEM_DISK=s3
+      - AWS_ENDPOINT=http://minio:9000
+    depends_on:
+      - mysql-primary
+      - redis
+
+  # ─── Queue Workers (منفصلين عن الـ web servers) ───
+  queue-worker:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    command: php artisan queue:work redis --sleep=3 --tries=3 --max-time=3600
+    volumes:
+      - .:/var/www/html
+    environment:
+      - QUEUE_CONNECTION=redis
+      - REDIS_HOST=redis
+      - DB_HOST=mysql-primary
+      - DB_PORT=3307
+      - DB_DATABASE=laravel
+      - DB_USERNAME=root
+      - DB_PASSWORD=secret
+    deploy:
+      replicas: 1   # ← تقدر تزودهم زي app servers بالظبط
+    depends_on:
+      - redis
+      - mysql-primary
+
+  # ─── Scheduler ───
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: scheduler
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=mysql-primary
+      - REDIS_HOST=redis
+    restart: unless-stopped
+    depends_on:
+      - mysql-primary
+      - redis
+
+  # ─── Cache / Sessions / Queue ───
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  # ─── Database ───
+  mysql-primary:
+    image: mysql:8
+    container_name: viralume-mysql-primary
+    command: >
+      --server-id=1
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+    environment:
+      MYSQL_DATABASE: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - mysql-primary-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+  mysql-replica:
+    image: mysql:8
+    container_name: vira-lume-mysql-replica
+    command: >
+      --server-id=2
+      --relay-log=relay-bin
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+      --read-only=ON
+    environment:
+      MYSQL_DATABASE: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+    volumes:
+      - mysql-replica-data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+    depends_on:
+      - mysql-primary
+
+  # ═══════════ Replica Setup (يشتغل مرة واحدة بس) ═══════════
+  replica-init:
+    image: mysql:8
+    container_name: viralume-mysql-replica-init
+    volumes:
+      - ./docker/replica-setup.sh:/replica-setup.sh
+    entrypoint: ["/bin/bash", "/replica-setup.sh"]
+    depends_on:
+      - mysql-primary
+      - mysql-replica
+
+  # ─── S3 محلي (بديل كامل ومتوافق) ───
+  minio:
+    image: minio/minio
+    container_name: minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio-data:/data
+
+volumes:
+  mysql-primary-data:
+  mysql-replica-data:
+  minio-data:
