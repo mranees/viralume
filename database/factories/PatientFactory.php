@@ -20,7 +20,6 @@ class PatientFactory extends Factory
         return [
             'user_id' => UserFactory::new(),
             'address' => fake()->address(),
-            'follow_up' => json_encode(['']),
         ];
     }
 }

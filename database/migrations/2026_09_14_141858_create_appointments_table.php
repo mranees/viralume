@@ -24,7 +24,7 @@ return new class extends Migration
                 'confirmed',
                 'cancelled',
                 'completed',
-                'no-show',
+                'no_show',
             ])->default('pending');
             $table->decimal('total_cost', 10, 2)->default(0);
             $table->text('notes')->nullable();

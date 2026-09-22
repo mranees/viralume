@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Appointment;
+use App\Models\Doctor;
 use App\Models\FollowUp;
+use App\Models\Patient;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +21,10 @@ class FollowUpFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'patient_id' => fake()->randomElement(Patient::all()->pluck('id')),
+            'doctor_id' => fake()->randomElement(Doctor::all()->pluck('id')),
+            'appointment_id' => fake()->randomElement(Appointment::all()->pluck('id')),
+            'notes' => fake()->text(150),
         ];
     }
 }

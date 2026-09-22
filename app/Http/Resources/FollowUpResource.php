@@ -2,10 +2,11 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PatientResource extends JsonResource
+class FollowUpResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +17,10 @@ class PatientResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->user->name,
-            'email' => $this->user->email,
-            'phone' => $this->user->phone,
-            'address' => $this->address,
-            // 'followUps' => FollowUpResource::collection( $this->followUps)
+            'doctor' => $this->doctor->user->name,
+            'date' => Carbon::parse($this->appointment->date)->format('Y-m-d'),
+            'time' => Carbon::parse($this->appointment->starts_at)->format('H:i'),
+            'notes' => $this->notes,
         ];
     }
 }

@@ -44,7 +44,7 @@ defineProps({
                 </TableRow>
             </TableHeader>
             <TableBody>
-                <TableRow v-for="doctor in doctors.data" :v-key="'doctor-'+doctor.id">
+                <TableRow v-for="doctor in doctors.data" :key="'doctor-'+doctor.id">
                     <TableCell>{{ doctor.name }}</TableCell>
                     <TableCell>{{ doctor.email }}</TableCell>
                     <TableCell>{{ doctor.phone }}</TableCell>
