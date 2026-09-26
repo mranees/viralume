@@ -10,7 +10,16 @@ import {
     TableCell,
 
  } from '@/components/ui/table';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import { Eye, Pencil, Trash } from '@lucide/vue';
+import { router } from '@inertiajs/vue3';
 
 defineOptions({
     layout: {
@@ -25,6 +34,10 @@ defineOptions({
 defineProps({
     patients: Object,
 })
+function goToPage(page)
+{
+    router.get('/patients', { page }, {preserveState: true, preserveScroll: true, only: ['patients']});
+}
 </script>
 
 <template>
@@ -39,7 +52,7 @@ defineProps({
                     <TableHead>Phone</TableHead>
                     <TableHead>Address</TableHead>
                     <!-- <TableHead>Follow Ups</TableHead> -->
-                    <TableHead>Actions</TableHead>
+                    <TableHead class="text-center">Actions</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -58,6 +71,29 @@ defineProps({
                 </TableRow>
             </TableBody>
         </Table>
+    </div>
+    <div class="flex justify-end me-4">
+        <div class="flex flex-col justify-end gap-6">
+            <Pagination v-slot="{ page }" :items-per-page="patients.meta.per_page" :total="patients.meta.total" :default-page="patients.meta.current_page" @update:page="goToPage">
+            <PaginationContent v-slot="{ items }">
+                <PaginationPrevious />
+
+                <template v-for="(item, index) in items" :key="index">
+                <PaginationItem
+                    v-if="item.type === 'page'"
+                    :value="item.value"
+                    :is-active="item.value === page"
+                >
+                    {{ item.value }}
+                </PaginationItem>
+                </template>
+
+                <PaginationEllipsis :index="4" />
+
+                <PaginationNext />
+            </PaginationContent>
+            </Pagination>
+        </div>
     </div>
 </template>
 

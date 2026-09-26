@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enum\UsersRoles;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\FollowUp;
@@ -21,21 +22,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        User::factory(10)->create();
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+            'role' => UsersRoles::ADMIN,
+        ]);
 
-        Specialization::factory(5)->create();
-        Patient::factory(10)->create();
-        for ($i=0; $i < 5; $i++) {
-            $doctor = Doctor::factory()->create();
-            $doctor->specializations()->attach(Specialization::all()->random(2));
-        }
-        Appointment::factory(20)->create();
-        FollowUp::factory(20)->create();
+        // Specialization::factory(5)->create();
+        // Patient::factory(10)->create();
+        // for ($i=0; $i < 5; $i++) {
+        //     $doctor = Doctor::factory()->create();
+        //     $doctor->specializations()->attach(Specialization::all()->random(2));
+        // }
+        // Appointment::factory(20)->create();
+        // FollowUp::factory(20)->create();
         // $listOfDoctors = Doctor::all()->pluck(['id', 'vizita_price']);
         // $listOfPatients = Patient::all()->pluck('id');
         // $listOfReceptients = User::where('role', 'receptionist')->get()->pluck('id');

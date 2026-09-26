@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\AppointmentStatus;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -39,6 +40,7 @@ class Appointment extends Model
             'date' => 'date',
             'time' => 'time',
             'total_cost' => 'decimal:2',
+            'status' => AppointmentStatus::class,
         ];
     }
 }

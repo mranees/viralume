@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PatientController extends Controller
 {
@@ -13,7 +14,25 @@ class PatientController extends Controller
      */
     public function index()
     {
-        $patients = PatientResource::collection(Patient::paginate(10));
+        $page = request('page', 1);
+        $key = "patients:page:{$page}";
+
+        $patients = Cache::remember($key, 60, function() {
+            $paginated = Patient::paginate(5);
+
+            return [
+                'data' => json_decode(PatientResource::collection($paginated->items())->toJson(), true),
+                'meta' => [
+                    'current_page' => $paginated->currentPage(),
+                    'last_page'    => $paginated->lastPage(),
+                    'total'        => $paginated->total(),
+                    'per_page'     => $paginated->perPage(),
+                ],
+            ];
+        });
+
+
+        // $patients = PatientResource::collection(Patient::paginate(10));
 
         return inertia('Patients/index', [
             'patients' => $patients,
