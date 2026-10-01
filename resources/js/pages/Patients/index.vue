@@ -18,16 +18,21 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Eye, Pencil, Trash } from '@lucide/vue';
-import { router } from '@inertiajs/vue3';
+import { Eye, Pencil, Plus, Search, Trash } from '@lucide/vue';
+import { Link, router } from '@inertiajs/vue3';
+import Input from '@/components/ui/input/Input.vue';
 
 defineOptions({
     layout: {
         breadcrumbs: [
             {
+                title: 'Dashboard',
+                href: '/',
+            },
+            {
                 title: 'Patients',
                 href: '/patients',
-            }
+            },
         ],
     },
 });
@@ -41,7 +46,12 @@ function goToPage(page)
 </script>
 
 <template>
-
+    <div class="flex justify-between mx-8 my-2">
+        <div class="flex gap-2 items-center"><Input placeholder="Search..." /><Search /></div>
+        <div class="flex">
+            <Link href="patients/create"><Button><Plus /> New Patient</Button></Link>
+        </div>
+    </div>
     <div class="flex justify-center m-8">
         <Table class="w-full">
             <TableCaption>A list of Patients.</TableCaption>
@@ -57,23 +67,23 @@ function goToPage(page)
             </TableHeader>
             <TableBody>
                 <TableRow v-for="patient in patients.data" :key="'patient-'+patient.id">
-                    <TableCell>{{ patient.name }}</TableCell>
-                    <TableCell>{{ patient.email }}</TableCell>
-                    <TableCell>{{ patient.phone }}</TableCell>
-                    <TableCell class=" text-ellipsis">{{ patient.address }}</TableCell>
+                    <TableCell class="w-[15%]">{{ patient.name }}</TableCell>
+                    <TableCell class="w-[15%]">{{ patient.email }}</TableCell>
+                    <TableCell class="w-[15%]">{{ patient.phone }}</TableCell>
+                    <TableCell>{{ patient.address }}</TableCell>
                     <!-- <TableCell v-if="patient.followUps.length"><span v-for="followUp in patient.followUps" :key="'followup-'+followUp.id">- Doctor: {{ followUp.doctor }} @ Date: {{ followUp.date }} {{ followUp.time }}<br /> Notes: {{ followUp.notes }}, <br /></span></TableCell>
                     <TableCell class="text-center" v-else><span class="text-center">No Follow Up Yet.</span></TableCell> -->
                     <TableCell class="flex justify-center gap-2 text-white">
-                        <Button ><Eye /> Show</Button>
-                        <Button class="bg-green-500 "><Pencil /> Edit</Button>
-                        <Button class="bg-red-500 text-white"><Trash /> Delete</Button>
+                        <Button ><Eye /></Button>
+                        <Button><Pencil /></Button>
+                        <Button class="bg-red-500 text-white"><Trash /></Button>
                     </TableCell>
                 </TableRow>
             </TableBody>
         </Table>
     </div>
     <div class="flex justify-end me-4">
-        <div class="flex flex-col justify-end gap-6">
+        <div v-if="patients.data.length > patients.meta.per_page" class="flex flex-col justify-end gap-6">
             <Pagination v-slot="{ page }" :items-per-page="patients.meta.per_page" :total="patients.meta.total" :default-page="patients.meta.current_page" @update:page="goToPage">
             <PaginationContent v-slot="{ items }">
                 <PaginationPrevious />
