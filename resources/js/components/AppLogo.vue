@@ -2,7 +2,8 @@
 import { usePage } from '@inertiajs/vue3';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 
-const name = usePage().props.name;
+const appname = usePage().props.name;
+defineProps<{name: String}>();
 </script>
 
 <template>
