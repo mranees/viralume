@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\DoctorTimeOffFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['doctor_id', 'date', 'start_time', 'end_time', 'reason'])]
 class DoctorTimeOff extends Model
 {
-    /** @use HasFactory<\Database\Factories\DoctorTimeOffFactory> */
+    /** @use HasFactory<DoctorTimeOffFactory> */
     use HasFactory;
 
     public function casts(): array
@@ -26,5 +27,4 @@ class DoctorTimeOff extends Model
     {
         return $this->belongsTo(Doctor::class);
     }
-
 }

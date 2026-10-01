@@ -17,26 +17,25 @@ class PatientController extends Controller
         $page = request('page', 1);
         $key = "patients:page:{$page}";
 
-        $patients = Cache::remember($key, 60, function() {
-            $paginated = Patient::paginate(5);
+        $patients = Cache::remember($key, 5, function () {
+            $paginated = Patient::paginate(10);
 
             return [
                 'data' => json_decode(PatientResource::collection($paginated->items())->toJson(), true),
                 'meta' => [
                     'current_page' => $paginated->currentPage(),
-                    'last_page'    => $paginated->lastPage(),
-                    'total'        => $paginated->total(),
-                    'per_page'     => $paginated->perPage(),
+                    'last_page' => $paginated->lastPage(),
+                    'total' => $paginated->total(),
+                    'per_page' => $paginated->perPage(),
                 ],
             ];
         });
-
 
         // $patients = PatientResource::collection(Patient::paginate(10));
 
         return inertia('Patients/index', [
             'patients' => $patients,
-            ]);
+        ]);
     }
 
     /**
@@ -44,7 +43,7 @@ class PatientController extends Controller
      */
     public function create()
     {
-        //
+        return inertia('Patients/create');
     }
 
     /**

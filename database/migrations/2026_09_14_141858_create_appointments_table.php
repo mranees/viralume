@@ -32,7 +32,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->unique(['doctor_id', 'date', 'starts_at'], 'doctor_date_starts_at_unique');
-            $table->index(['doctor_id', 'date', 'starts_at' ,'status']);
+            $table->index(['doctor_id', 'date', 'starts_at', 'status']);
         });
     }
 

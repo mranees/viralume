@@ -33,7 +33,7 @@ class AppointmentFactory extends Factory
 
         $date = $selectedDateTime->format('Y-m-d');
         $startTime = fake()->randomElement($timeSlots);
-        $startCarbon = Carbon::parse($date . ' ' . $startTime);
+        $startCarbon = Carbon::parse($date.' '.$startTime);
         $endTime = $startCarbon->copy()->addMinutes(30)->format('H:i');
 
         $doctor = fake()->randomElement(Doctor::all('id', 'vizita_price'));

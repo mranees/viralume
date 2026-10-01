@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-
-use Illuminate\Http\Request;
 use App\Models\DoctorSchedule;
+use Illuminate\Http\Request;
 
 class DoctorScheduleController extends Controller
 {

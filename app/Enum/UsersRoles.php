@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum UsersRoles: String
+enum UsersRoles: string
 {
     case PATIENT = 'patient';
     case DOCTOR = 'doctor';

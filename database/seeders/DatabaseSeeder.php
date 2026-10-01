@@ -9,7 +9,6 @@ use App\Models\FollowUp;
 use App\Models\Patient;
 use App\Models\Specialization;
 use App\Models\User;
-use Database\Factories\DoctorFactory;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
