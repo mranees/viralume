@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\PatientFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Cache;
 #[Fillable((['user_id', 'address']))]
 class Patient extends Model
 {
-    /** @use HasFactory<\Database\Factories\PatientFactory> */
+    /** @use HasFactory<PatientFactory> */
     use HasFactory;
 
     protected $with = ['user'];
@@ -26,10 +27,10 @@ class Patient extends Model
 
     protected static function booted(): void
     {
-        static::saved(function ($patient){
+        static::saved(function ($patient) {
             Cache::forget('patients');
         });
-        static::deleted(function ($patient){
+        static::deleted(function ($patient) {
             Cache::forget('patients');
         });
     }
@@ -38,10 +39,13 @@ class Patient extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
-    }public function followUps(): HasMany
+    }
+
+    public function followUps(): HasMany
     {
         return $this->hasMany(FollowUp::class);
     }

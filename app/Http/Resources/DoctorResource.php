@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -13,6 +12,8 @@ class DoctorResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+
+    public static $wrap = null;
     public function toArray(Request $request): array
     {
         return [
@@ -20,10 +21,11 @@ class DoctorResource extends JsonResource
             'name' => $this->user->name,
             'email' => $this->user->email,
             'phone' => $this->user->phone,
-            'specializations' => $this->specializations,
+            'specializations' => SpecializationResource::collection($this->specializations),
             'bio' => $this->bio,
             'vizita_price' => $this->vizita_price,
             'profile_image' => $this->profile_image,
+            'is_active' => $this->is_active,
         ];
     }
 }

@@ -2,41 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Doctor\DoctorStoreFormRequest;
+use App\Http\Requests\Doctor\DoctorUpdateFormRequest;
 use App\Http\Resources\DoctorResource;
+use App\Http\Resources\SpecializationResource;
 use App\Models\Doctor;
+use App\Models\Specialization;
+use App\Services\DoctorService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class DoctorController extends Controller
 {
+    protected DoctorService $doctorService;
+
+    public function __construct(DoctorService $doctorService)
+    {
+        $this->doctorService = $doctorService;
+    }
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $doctors = DoctorResource::collection(Doctor::with('specializations')->get());
-    //     return inertia('Doctors/index', [
-    //         'doctors' => $doctors,
-    //     ]);
-    // }
-    public function index()
+    public function index(Request $request)
     {
-        $page = (int) request('page', 1);
-        $key = "doctors:page:{$page}";
+        $doctors = $this->doctorService->index($request);
 
-        $doctors = Cache::remember($key, 60, function () {
-            $paginated = Doctor::with('specializations')->paginate(2);
-
-            return [
-                'data' => json_decode(DoctorResource::collection($paginated->items())->toJson(), true),
-                'meta' => [
-                    'current_page' => $paginated->currentPage(),
-                    'last_page'    => $paginated->lastPage(),
-                    'total'        => $paginated->total(),
-                    'per_page'     => $paginated->perPage(),
-                ],
-            ];
-        });
         return inertia('Doctors/index', [
             'doctors' => $doctors,
         ]);
@@ -47,15 +36,25 @@ class DoctorController extends Controller
      */
     public function create()
     {
-        //
+        $specializations = Specialization::all('id', 'name');
+
+        // dd($specialities);
+        return inertia('Doctors/create', [
+            'specializations' => $specializations,
+            'doctor' => new Doctor,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(DoctorStoreFormRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $this->doctorService->store($validated);
+
+        return redirect()->route('doctors.index')->with('message', 'Doctor created successfully');
     }
 
     /**
@@ -63,7 +62,9 @@ class DoctorController extends Controller
      */
     public function show(Doctor $doctor)
     {
-        //
+        return inertia('Doctors/show', [
+            'doctor' => new DoctorResource($doctor),
+        ]);
     }
 
     /**
@@ -71,15 +72,22 @@ class DoctorController extends Controller
      */
     public function edit(Doctor $doctor)
     {
-        //
+        $specializations = SpecializationResource::collection(Specialization::all())->resolve();
+        return inertia('Doctors/edit', [
+            'specializations' => $specializations,
+            'doctor' => new DoctorResource($doctor),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Doctor $doctor)
+    public function update(DoctorUpdateFormRequest $request, Doctor $doctor)
     {
-        //
+        $validated = $request->validated();
+        $this->doctorService->update($doctor, $validated);
+
+        return redirect()->route('doctors.index')->with('message', 'Doctor updated successfully');
     }
 
     /**
@@ -87,6 +95,8 @@ class DoctorController extends Controller
      */
     public function destroy(Doctor $doctor)
     {
-        //
+        $doctor->delete();
+
+        return redirect()->route('doctors.index')->with('message', 'Doctor deleted successfully');
     }
 }
