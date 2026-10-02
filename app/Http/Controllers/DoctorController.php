@@ -63,7 +63,7 @@ class DoctorController extends Controller
     public function show(Doctor $doctor)
     {
         return inertia('Doctors/show', [
-            'doctor' => new DoctorResource($doctor),
+            'doctor' => new DoctorResource($doctor)->resolve(),
         ]);
     }
 
@@ -75,7 +75,7 @@ class DoctorController extends Controller
         $specializations = SpecializationResource::collection(Specialization::all())->resolve();
         return inertia('Doctors/edit', [
             'specializations' => $specializations,
-            'doctor' => new DoctorResource($doctor),
+            'doctor' => new DoctorResource($doctor)->resolve(),
         ]);
     }
 

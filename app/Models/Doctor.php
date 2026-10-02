@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 
 #[Fillable(['user_id', 'bio', 'vizita_price', 'profile_image', 'is_active'])]
 class Doctor extends Model
@@ -27,6 +28,15 @@ class Doctor extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saved(function ($patient) {
+            Cache::tags('doctors.index')->flush();
+        });
+        static::deleted(function ($patient) {
+            Cache::tags('doctors.index')->flush();
+        });
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

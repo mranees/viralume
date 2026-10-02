@@ -28,10 +28,10 @@ class Patient extends Model
     protected static function booted(): void
     {
         static::saved(function ($patient) {
-            Cache::forget('patients');
+            Cache::tags('patients.index')->flush();
         });
         static::deleted(function ($patient) {
-            Cache::forget('patients');
+            Cache::tags('patients.index')->flush();
         });
     }
 

@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import Card from '@/components/ui/card/Card.vue';
-import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Input from '@/components/ui/input/Input.vue';
 import InputError from '@/components/InputError.vue';
 import Label from '@/components/ui/label/Label.vue';
-import Switch from '@/components/ui/switch/Switch.vue';
-import { Textarea } from '@/components/ui/textarea';
-import patients from '@/routes/patients';
-import { Form, Link } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
-import { CheckboxGroupRoot } from 'reka-ui';
+import { Form, Link, useForm, usePage } from '@inertiajs/vue3';
+import { reactive } from 'vue';
 import { MoveLeft } from '@lucide/vue';
+import patients from '@/routes/patients';
 
 interface Patient {
     id: number;
@@ -25,6 +21,13 @@ const props = defineProps<{
     patient: Patient;
 }>();
 
+const fields = reactive({
+    name: props.patient.name,
+    email: props.patient.email,
+    phone: props.patient.phone,
+    address: props.patient.address,
+})
+
 defineOptions({
     layout: {
         breadcrumbs: [
@@ -33,12 +36,12 @@ defineOptions({
                 href: '/',
             },
             {
-                title: 'Patients',
-                href: '/patients',
+                title: 'Doctors',
+                href: '/doctors',
             },
             {
-                title: 'Add New Patient',
-                href: '/patients/create',
+                title: 'Edit Doctor',
+                href: 'doctors/{doctor.id}/edit',
             },
         ],
     },
@@ -55,34 +58,32 @@ const logdata = (data: Record<string, any>) => {
     <div class=" w-full flex flex-col justify-center items-center mx-8 ">
         <div class="w-1/2 my-4 text-center">
             <Card>
-                <Form v-bind="patients.store.form()" :transform="logdata" v-slot="{processing, errors}">
-                    <div class="flex justify-between m-4">
-                    <div class="flex justify-start">
+                <Form v-bind="patients.update.form(props.patient.id)" v-slot="{errors, processing}">
+                    <div class="flex justify-start w-full ms-4">
                         <Link :href="patients.index()" class="flex items-center gap-2"><MoveLeft color="white" /> Back</Link>
                     </div>
-                    <h1>Add New Patient</h1>
-                    </div>
+                    <h1 class="my-4">Edit Patient "{{ props.patient.name }}"</h1>
                     <div class="flex justify-between">
                         <div class="w-full flex flex-col gap-2 m-4">
                             <Label for="name">Name:</Label>
-                            <Input id="name" name="name" placeholder="Patient Name" />
+                            <Input id="name" name="name" v-model="fields.name" />
                             <InputError :message="errors.name" />
                         </div>
                         <div class="w-full flex flex-col gap-2 m-4">
                             <Label for="email">E-mail:</Label>
-                            <Input id="email" name="email" placeholder="Patient Email Address" />
+                            <Input id="email" name="email" v-model="fields.email" />
                             <InputError :message="errors.email" />
                         </div>
                     </div>
                     <div class="flex justify-between">
                         <div class="w-full flex flex-col gap-2 m-4">
                             <Label for="phone">Phone Number:</Label>
-                            <Input id="phone" name="phone" placeholder="Patient Phone Number" />
+                            <Input id="phone" name="phone" v-model="fields.phone" />
                             <InputError :message="errors.phone" />
                         </div>
                         <div class="w-full flex flex-col gap-2 m-4">
                             <Label for="address">Address:</Label>
-                            <Input id="address" name="address" placeholder="Patient Address" />
+                            <Input id="address" name="address" v-model="fields.address" />
                             <InputError :message="errors.address" />
                         </div>
                     </div>
