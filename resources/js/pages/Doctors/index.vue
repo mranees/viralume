@@ -41,7 +41,7 @@ defineOptions({
     },
 });
 
-interface DoctorInterface {
+interface Doctor {
     id: number;
     name: string;
     email: string;
@@ -54,7 +54,7 @@ interface DoctorInterface {
 }
 
 const props = defineProps<{
-    doctors: DoctorInterface[],
+    doctors: Doctor[],
 }>();
 
 const search = ref<string | null>();

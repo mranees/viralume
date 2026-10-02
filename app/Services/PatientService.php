@@ -4,13 +4,15 @@ namespace App\Services;
 
 use App\Enum\UsersRoles;
 use App\Http\Resources\DoctorResource;
+use App\Http\Resources\PatientResource;
 use App\Models\Doctor;
+use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-class DoctorService
+class PatientService
 {
     /**
      * Create a new class instance.
@@ -25,25 +27,25 @@ class DoctorService
         $page = (int) request('page', 1);
         $key = "doctors:page:{$page}";
         if ($request->search != null) {
-            $doctors = Doctor::search($request?->search)->with('specializations')->paginate(10);
+            $patients = Patient::search($request?->search)->paginate(10);
 
             return [
-                'data' => json_decode(DoctorResource::collection($doctors->items())->toJson(), true),
+                'data' => json_decode(PatientResource::collection($patients->items())->toJson(), true),
                 'meta' => [
-                    'current_page' => $doctors->currentPage(),
-                    'from' => $doctors->firstItem(),
-                    'to' => $doctors->lastItem(),
-                    'last_page' => $doctors->lastPage(),
-                    'total' => $doctors->total(),
-                    'per_page' => $doctors->perPage(),
+                    'current_page' => $patients->currentPage(),
+                    'from' => $patients->firstItem(),
+                    'to' => $patients->lastItem(),
+                    'last_page' => $patients->lastPage(),
+                    'total' => $patients->total(),
+                    'per_page' => $patients->perPage(),
                 ],
             ];
         } else {
-            $doctors = Cache::tags('doctors.index')->remember($key, 5, function () {
-                $paginated = Doctor::with('specializations')->paginate(10);
+            $patients = Cache::remember($key, 5, function () {
+                $paginated = Patient::paginate(10);
 
                 return [
-                    'data' => json_decode(DoctorResource::collection($paginated->items())->toJson(), true),
+                    'data' => json_decode(PatientResource::collection($paginated->items())->toJson(), true),
                     'meta' => [
                         'current_page' => $paginated->currentPage(),
                         'from' => $paginated->firstItem(),
@@ -56,9 +58,7 @@ class DoctorService
             });
         }
 
-
-
-        return $doctors;
+        return $patients;
     }
 
     public function store (array $data):void
@@ -70,39 +70,31 @@ class DoctorService
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => bcrypt('password'),
-            'role' => UsersRoles::DOCTOR,
+            'role' => UsersRoles::PATIENT,
         ]);
 
-        $doctor = Doctor::create([
+        Patient::create([
             'user_id' => $user->id,
-            'bio' => $data['bio'],
-            'vizita_price' => $data['vizita_price'],
-            'profile_image' => $data['profile_image'],
-            'is_active' => $data['is_active'],
+            'address' => $data['address'],
         ]);
 
-        $doctor->specializations()->sync($data['specializations']);
         });
 
     }
 
-    public function update(Doctor $doctor, array $data)
+    public function update(Patient $patient, array $data)
     {
-        DB::transaction(function () use ($doctor,$data) {
-        $doctor->user()->update([
+        DB::transaction(function () use ($patient,$data) {
+        $patient->user()->update([
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'],
         ]);
 
-        $doctor->update([
-            'bio' => $data['bio'],
-            'vizita_price' => $data['vizita_price'],
-            'profile_image' => $data['profile_image'],
-            'is_active' => $data['is_active'],
+        $patient->update([
+            'address' => $data['address'],
         ]);
 
-        $doctor->specializations()->sync($data['specializations']);
         });
 
     }

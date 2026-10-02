@@ -2,36 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Patient\PatientStoreFormRequest;
+use App\Http\Requests\Patient\PatientUpdateFormRequest;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
+use App\Services\PatientService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class PatientController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+
+    protected PatientService $patientService;
+
+    public function __construct(PatientService $patientService)
     {
-        $page = request('page', 1);
-        $key = "patients:page:{$page}";
-
-        $patients = Cache::remember($key, 5, function () {
-            $paginated = Patient::paginate(10);
-
-            return [
-                'data' => json_decode(PatientResource::collection($paginated->items())->toJson(), true),
-                'meta' => [
-                    'current_page' => $paginated->currentPage(),
-                    'last_page' => $paginated->lastPage(),
-                    'total' => $paginated->total(),
-                    'per_page' => $paginated->perPage(),
-                ],
-            ];
-        });
-
-        // $patients = PatientResource::collection(Patient::paginate(10));
+        $this->patientService = $patientService;
+    }
+    public function index(Request $request)
+    {
+        $patients = $this->patientService->index($request);
 
         return inertia('Patients/index', [
             'patients' => $patients,
@@ -43,15 +35,21 @@ class PatientController extends Controller
      */
     public function create()
     {
-        return inertia('Patients/create');
+        return inertia('Patients/create', [
+            'patient' => new Patient,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PatientStoreFormRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $this->patientService->store($validated);
+
+        return redirect()->route('patients.index')->with('message', 'Patient created successfully');
     }
 
     /**
@@ -59,7 +57,9 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
-        //
+        return inertia('Patients/show', [
+            'patient' => new PatientResource($patient)->resolve(),
+        ]);
     }
 
     /**
@@ -67,15 +67,21 @@ class PatientController extends Controller
      */
     public function edit(Patient $patient)
     {
-        //
+        return inertia('Patients/edit', [
+            'patient' => new PatientResource($patient)->resolve(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Patient $patient)
+    public function update(PatientUpdateFormRequest $request, Patient $patient)
     {
-        //
+        $validated = $request->validated();
+
+        $this->patientService->update($patient, $validated);
+
+        return redirect()->route('patients.index')->with('message', 'Patient updated successfully');
     }
 
     /**
@@ -83,6 +89,8 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        //
+        $patient->delete();
+
+        return back()->with('message', 'Patient deleted successfully');
     }
 }

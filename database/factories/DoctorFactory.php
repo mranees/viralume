@@ -20,7 +20,7 @@ class DoctorFactory extends Factory
         return [
             'user_id' => UserFactory::new(),
             'bio' => fake()->text(),
-            'profile_image' => 'https://i.pravatar.cc/300',
+            'profile_image' => 'https://i.pravatar.cc/300?img='.rand(1, 70),
             'vizita_price' => fake()->randomFloat(2, 100, 500),
             'is_active' => true,
         ];
