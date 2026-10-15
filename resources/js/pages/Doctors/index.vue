@@ -19,12 +19,12 @@ import {
 } from '@/components/ui/pagination';
 import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 import Button from '@/components/ui/button/Button.vue';
-import { Eye, Pencil, Plus, Search, Trash, Trash2 } from '@lucide/vue';
-import { rand } from '@vueuse/core';
-import { Link, router } from '@inertiajs/vue3';
 import Input from '@/components/ui/input/Input.vue';
-import doctorsroute from '@/routes/doctors';
+import { Eye, Pencil, Plus, Search, Trash } from '@lucide/vue';
 import { ref, watch } from 'vue';
+import { Head, Link, router } from '@inertiajs/vue3';
+import doctorsroute from '@/routes/doctors';
+import { Doctor } from '@/types/doctor';
 
 defineOptions({
     layout: {
@@ -41,22 +41,11 @@ defineOptions({
     },
 });
 
-interface Doctor {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    vizita_price: number;
-    bio: string;
-    profile_image: string;
-    is_active: boolean;
-    specializations: Array<{ id: number; name: string }>;
-}
-
 const props = defineProps<{
     doctors: Doctor[],
 }>();
 
+// for live search bar
 const search = ref<string | null>();
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -93,11 +82,10 @@ const confirmDelete = (doctorId: number) => {
     });
 };
 
-console.log(JSON.stringify(props.doctors));
 </script>
 
 <template>
-
+    <Head variant="small" title="List of Doctors" dessciption="list of all doctors in the system" />
     <div class="flex justify-between mx-8 my-2">
         <div class="flex gap-2 items-center"><Input v-model="search" placeholder="Search..." /><Search /></div>
         <div class="flex">
@@ -121,7 +109,7 @@ console.log(JSON.stringify(props.doctors));
             </TableHeader>
             <TableBody>
                 <TableRow v-for="doctor in doctors.data" :key="'doctor-'+doctor.id">
-                    <TableCell class="w-25"><img class="w-10 h-10 rounded-full" :src="'https://i.pravatar.cc/300?img='+rand(1,70)" alt="" /></TableCell>
+                    <TableCell class="w-24"><img class="w-10 h-10 rounded-full" :src="doctor.profile_image" alt="" /></TableCell>
                     <TableCell class="w-[15%]">{{ doctor.name }}</TableCell>
                     <TableCell class="w-[15%]">{{ doctor.email }}</TableCell>
                     <TableCell class="w-[15%]">{{ doctor.phone }}</TableCell>

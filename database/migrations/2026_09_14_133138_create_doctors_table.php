@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->unique()->constrained('users')->cascadeOnDelete();
             $table->longText('bio')->nullable();
-            $table->string('profile_image')->nullable();
+            $table->string('profile_image')->nullable()->default('doctor_default_profile_image.jpg');
             $table->decimal('vizita_price', 10, 2)->default(100);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

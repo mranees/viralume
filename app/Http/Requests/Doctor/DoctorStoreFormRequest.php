@@ -26,11 +26,11 @@ class DoctorStoreFormRequest extends FormRequest
             // user mdoel fields
             'name' => 'required|string|min:8|max:255',
             'email' => 'required|email|unique:users,email|min:8|max:255',
-            'phone' => 'required|string|min:8|max:20',
+            'phone' => 'required|string|regex:/^\+[1-9][0-9]{1,14}$/|min:8|max:20',
             // doctor model fields
             'bio' => 'sometimes|nullable|string|max:500',
             'vizita_price' => 'required|numeric|min:0',
-            'profile_image' => 'nullable',
+            'profile_image' => 'nullable|sometimes|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_active' => 'boolean',
             // specializations
             'specializations' => 'required|array|min:1',

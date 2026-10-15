@@ -1,4 +1,4 @@
-import { specializations } from "./specializations";
+import { Specialization } from "./specialization";
 
 export type Doctor = {
     id: number;
@@ -6,9 +6,9 @@ export type Doctor = {
     email: string;
     phone: string;
     address: string;
-    bio: string;
+    bio: string | null;
     vizita_price: number;
-    profile_image: string;
+    profile_image: string | null;
     is_active: boolean;
-    specializations: specializations[];
+    specializations: Specialization[];
 }

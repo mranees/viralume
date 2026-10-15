@@ -41,7 +41,7 @@ class DoctorController extends Controller
         // dd($specialities);
         return inertia('Doctors/create', [
             'specializations' => $specializations,
-            'doctor' => new Doctor,
+            'doctor' => new Doctor(),
         ]);
     }
 
@@ -86,7 +86,6 @@ class DoctorController extends Controller
     {
         $validated = $request->validated();
         $this->doctorService->update($doctor, $validated);
-
         return redirect()->route('doctors.index')->with('message', 'Doctor updated successfully');
     }
 
@@ -95,8 +94,9 @@ class DoctorController extends Controller
      */
     public function destroy(Doctor $doctor)
     {
-        $doctor->delete();
 
-        return redirect()->route('doctors.index')->with('message', 'Doctor deleted successfully');
+        $this->doctorService->delete($doctor);
+
+        return back()->with('message', 'Doctor deleted successfully');
     }
 }
