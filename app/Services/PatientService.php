@@ -30,7 +30,7 @@ class PatientService
             $patients = Patient::search($request?->search)->paginate(10);
 
             return [
-                'data' => json_decode(PatientResource::collection($patients->items())->toJson(), true),
+                'data' => PatientResource::collection($patients->items())->resolve(),
                 'meta' => [
                     'current_page' => $patients->currentPage(),
                     'from' => $patients->firstItem(),
@@ -45,7 +45,7 @@ class PatientService
                 $paginated = Patient::paginate(10);
 
                 return [
-                    'data' => json_decode(PatientResource::collection($paginated->items())->toJson(), true),
+                    'data' => PatientResource::collection($paginated->items())->resolve(),
                     'meta' => [
                         'current_page' => $paginated->currentPage(),
                         'from' => $paginated->firstItem(),

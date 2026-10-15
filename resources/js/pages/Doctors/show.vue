@@ -11,11 +11,11 @@ import {
 } from '@/components/ui/table';
 import Card from '@/components/ui/card/Card.vue';
 import doctors from '@/routes/doctors';
-import { Link, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { MoveLeft, Pencil, Trash } from '@lucide/vue';
 import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 import { ref } from 'vue';
-
+import { Doctor } from '@/types/doctor';
 
 defineOptions({
     layout:{
@@ -35,22 +35,12 @@ defineOptions({
         ],
     }
 })
-interface Doctor {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    vizita_price: number;
-    bio: string;
-    profile_image: string;
-    is_active: boolean;
-    specializations: Array<{ id: number; name: string }>;
-}
+
 const props = defineProps<{
     doctor: Doctor,
 }>();
 
-// for modals
+// for delete modals
 const deletingId = ref<number | null>(null);
 const openDialogId = ref<number | null>(null);
 
@@ -69,7 +59,9 @@ const confirmDelete = (doctorId: number) => {
     });
 };
 </script>
+
 <template>
+    <Head variant="small" title="Showing Doctor {{ props.doctor.name }}" dessciption="showing doctor {{ props.doctor.name }} details." />
     <div class=" w-full flex flex-col justify-center items-center mx-8 ">
         <div class="w-2/3 my-4 text-center">
             <Card>
