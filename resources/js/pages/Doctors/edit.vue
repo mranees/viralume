@@ -84,9 +84,8 @@ const clearAll = () =>
                         <h1 class="">Edit Doctor "{{ doctor.name }}"</h1>
                     </div>
                     <div class="w-48 mx-auto flex flex-col gap-0">
-                        <Button @click.prevent="clearAll" class="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full mb-[-2rem] z-10"><X class="w-4 h-4 text-black" /></Button>
+                        <Button @click.prevent="clearAll" class="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full -mb-8 z-10"><X class="w-4 h-4 text-black" /></Button>
                         <img :src="fields.profile_image" class="flex items-center justify-center m-auto w-48 h-48 rounded-full border border-blue-500" />
-                        ss{{ fields.profile_image }}
                     </div>
                     <div class="flex justify-between">
                         <div class="w-full flex flex-col gap-2 m-4">

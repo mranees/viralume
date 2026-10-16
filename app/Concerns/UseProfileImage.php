@@ -21,7 +21,7 @@ trait UseProfileImage
     }
     public function removeProfileImage(string $path)
     {
-        if ($path) {
+        if ($path && $path != 'doctor_default_profile_image.jpg') {
             Storage::disk('public')->delete($path);
         }
     }
