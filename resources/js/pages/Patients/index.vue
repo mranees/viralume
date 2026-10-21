@@ -67,6 +67,11 @@ function goToPage(page: any)
 {
     router.get('/patients', { page }, {preserveState: true, preserveScroll: true, only: ['patients']});
 }
+<<<<<<< HEAD
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> 5d6cb72 (still ading test cases)
 
 // for modals
 const deletingId = ref<number | null>(null);
@@ -88,7 +93,11 @@ const confirmDelete = (patientId: number) => {
     });
 };
 
+<<<<<<< HEAD
 console.log(JSON.stringify(props.patients));
+=======
+>>>>>>> Stashed changes
+>>>>>>> 5d6cb72 (still ading test cases)
 </script>
 
 <template>

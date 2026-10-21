@@ -129,7 +129,6 @@ const confirmDelete = (patientId: number) => {
                                     :processing="deletingId === patient.id"
                                     @confirm="confirmDelete(patient.id)"
                                 >
-
                                         <Trash class="text-red-500 hover:text-red-700 crusor-pointer" />
                                 </ConfirmDeleteDialog>
                                 </TableCell>
