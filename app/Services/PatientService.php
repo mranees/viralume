@@ -4,19 +4,18 @@ namespace App\Services;
 
 use App\Concerns\UseMetaPagination;
 use App\Enum\UsersRoles;
-use App\Http\Resources\DoctorResource;
 use App\Http\Resources\FollowUpResource;
 use App\Http\Resources\PatientResource;
-use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
 
 class PatientService
 {
     use UseMetaPagination;
+
     /**
      * Create a new class instance.
      */
@@ -77,6 +76,7 @@ class PatientService
             'data' => FollowUpResource::collection($paginated)->resolve(),
             'meta' => $this->getMetaPaginationData($paginated),
         ];
+
         // dd($patientData, $paginated, $patientFollowUps);
         return [
             'patient' => $patientData,
@@ -102,6 +102,6 @@ class PatientService
 
     public function delete(Patient $patient)
     {
-        DB::transaction(fn() => $patient->delete());
+        DB::transaction(fn () => $patient->delete());
     }
 }

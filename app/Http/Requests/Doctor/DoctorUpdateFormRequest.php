@@ -35,6 +35,6 @@ class DoctorUpdateFormRequest extends FormRequest
             // specializations
             'specializations' => 'required|array|min:1',
             'specializations.*' => 'integer|distinct|exists:specializations,id',
-            ];
+        ];
     }
 }

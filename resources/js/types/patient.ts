@@ -4,4 +4,4 @@ export type Patient = {
     email: string;
     phone: string;
     address: string;
-}
+};

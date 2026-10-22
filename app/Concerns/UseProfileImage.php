@@ -9,16 +9,20 @@ trait UseProfileImage
 {
     public function addProfileImage(?UploadedFile $image)
     {
-    if ($image) {
-            $customImageName = time() . '_doctor_profile_image.'  . $image->getClientOriginalExtension();
+        if ($image) {
+            $customImageName = time().'_doctor_profile_image.'.$image->getClientOriginalExtension();
+
             return $image->storeAs('doctors', $customImageName, 'public');
         }
+
         return 'doctor_default_profile_image.jpg';
     }
+
     public function editProfileImage(?UploadedFile $image)
     {
         //
     }
+
     public function removeProfileImage(string $path)
     {
         if ($path && $path != 'doctor_default_profile_image.jpg') {

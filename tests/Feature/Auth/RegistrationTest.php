@@ -7,7 +7,6 @@ use Tests\TestCase;
 
 class RegistrationTest extends TestCase
 {
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -35,7 +34,7 @@ class RegistrationTest extends TestCase
         $this->assertDatabaseHas('users', [
             'name' => 'Test2 User',
             'email' => 'test2@example.com',
-            ]);
+        ]);
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));

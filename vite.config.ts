@@ -36,7 +36,12 @@ export default defineConfig({
         port: 5173,
         origin: 'http://localhost:5173',
         cors: true,
-        allowedHosts: ['localhost', '127.0.0.1', 'host.docker.internal', /.*docker\.internal.*/],
+        allowedHosts: [
+            'localhost',
+            '127.0.0.1',
+            'host.docker.internal',
+            /.*docker\.internal.*/,
+        ],
         watch: {
             ignored: [
                 '**/.agents/**',

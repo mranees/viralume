@@ -1,14 +1,15 @@
 <?php
 
-/** @var Tests\TestCase $this */
+/** @var TestCase $this */
 
 use App\Enum\UsersRoles;
 use App\Models\Doctor;
 use App\Models\Specialization;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-uses(Tests\TestCase::class, RefreshDatabase::class)->in('Feature');
+uses(TestCase::class, RefreshDatabase::class)->in('Feature');
 
 test('check if the guest can not access the dashboard and user can', function () {
     $this->get('/dashboard')->assertRedirect(route('login'));
@@ -18,7 +19,7 @@ test('check if the guest can not access the dashboard and user can', function ()
     $this->actingAs($user)->get('/dashboard')->assertStatus(200);
 });
 
-test('check if the admin can create doctors', function(){
+test('check if the admin can create doctors', function () {
     $user = User::factory()->create([
         'role' => UsersRoles::ADMIN,
     ]);
@@ -33,7 +34,7 @@ test('check if the admin can create doctors', function(){
         'vizita_price' => 100,
         'profile_image' => null,
         'is_active' => true,
-        'specializations' => [1,2],
+        'specializations' => [1, 2],
     ])->assertRedirect(route('doctors.index'));
     $this->assertDatabaseHas('users', [
         'name' => 'Test2 User',
@@ -41,12 +42,12 @@ test('check if the admin can create doctors', function(){
     ])->assertDatabaseHas('doctors', [
         'bio' => 'test bio',
         'vizita_price' => 100,
-        'profile_image' => "doctor_default_profile_image.jpg",
+        'profile_image' => 'doctor_default_profile_image.jpg',
         'is_active' => 1,
     ]);
 });
 
-test('check if the doctor can login and authenticate', function(){
+test('check if the doctor can login and authenticate', function () {
     $user = User::factory()->create([
         'role' => UsersRoles::DOCTOR,
     ]);
@@ -57,7 +58,7 @@ test('check if the doctor can login and authenticate', function(){
     $this->assertAuthenticatedAs($user);
 });
 
-test('check if the admin can edit doctor details', function(){
+test('check if the admin can edit doctor details', function () {
     $user = User::factory()->create([
         'role' => UsersRoles::ADMIN,
     ]);
@@ -72,7 +73,7 @@ test('check if the admin can edit doctor details', function(){
         'vizita_price' => 100,
         'profile_image' => null,
         'is_active' => true,
-        'specializations' => [1,2],
+        'specializations' => [1, 2],
     ])->assertStatus(302)->assertRedirect(route('doctors.index'));
     $this->assertDatabaseHas('users', [
         'name' => 'Test2 doctor',
@@ -80,7 +81,7 @@ test('check if the admin can edit doctor details', function(){
     ])->assertDatabaseHas('doctors', [
         'bio' => 'test bio',
         'vizita_price' => 100,
-        'profile_image' => "doctor_default_profile_image.jpg",
+        'profile_image' => 'doctor_default_profile_image.jpg',
         'is_active' => 1,
     ]);
 });

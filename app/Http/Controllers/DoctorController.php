@@ -19,6 +19,7 @@ class DoctorController extends Controller
     {
         $this->doctorService = $doctorService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -41,7 +42,7 @@ class DoctorController extends Controller
         // dd($specialities);
         return inertia('Doctors/create', [
             'specializations' => $specializations,
-            'doctor' => new Doctor(),
+            'doctor' => new Doctor,
         ]);
     }
 
@@ -75,6 +76,7 @@ class DoctorController extends Controller
     public function edit(Doctor $doctor)
     {
         $specializations = SpecializationResource::collection(Specialization::all())->resolve();
+
         return inertia('Doctors/edit', [
             'specializations' => $specializations,
             'doctor' => new DoctorResource($doctor)->resolve(),
@@ -88,6 +90,7 @@ class DoctorController extends Controller
     {
         $validated = $request->validated();
         $this->doctorService->update($doctor, $validated);
+
         return redirect()->route('doctors.index')->with('message', 'Doctor updated successfully');
     }
 

@@ -26,7 +26,7 @@ const fields = reactive({
     email: props.patient.email,
     phone: props.patient.phone,
     address: props.patient.address,
-})
+});
 
 defineOptions({
     layout: {
@@ -51,45 +51,73 @@ const logdata = (data: Record<string, any>) => {
     console.log(data);
     return data;
 };
-
 </script>
 
 <template>
-    <div class=" w-full flex flex-col justify-center items-center mx-8 ">
-        <div class="w-1/2 my-4 text-center">
+    <div class="mx-8 flex w-full flex-col items-center justify-center">
+        <div class="my-4 w-1/2 text-center">
             <Card>
-                <Form v-bind="patients.update.form(props.patient.id)" v-slot="{errors, processing}">
-                    <div class="flex justify-start w-full ms-4">
-                        <Link :href="patients.index()" class="flex items-center gap-2"><MoveLeft color="white" /> Back</Link>
+                <Form
+                    v-bind="patients.update.form(props.patient.id)"
+                    v-slot="{ errors, processing }"
+                >
+                    <div class="ms-4 flex w-full justify-start">
+                        <Link
+                            :href="patients.index()"
+                            class="flex items-center gap-2"
+                            ><MoveLeft color="white" /> Back</Link
+                        >
                     </div>
-                    <h1 class="my-4">Edit Patient "{{ props.patient.name }}"</h1>
+                    <h1 class="my-4">
+                        Edit Patient "{{ props.patient.name }}"
+                    </h1>
                     <div class="flex justify-between">
-                        <div class="w-full flex flex-col gap-2 m-4">
+                        <div class="m-4 flex w-full flex-col gap-2">
                             <Label for="name">Name:</Label>
-                            <Input id="name" name="name" v-model="fields.name" />
+                            <Input
+                                id="name"
+                                name="name"
+                                v-model="fields.name"
+                            />
                             <InputError :message="errors.name" />
                         </div>
-                        <div class="w-full flex flex-col gap-2 m-4">
+                        <div class="m-4 flex w-full flex-col gap-2">
                             <Label for="email">E-mail:</Label>
-                            <Input id="email" name="email" v-model="fields.email" />
+                            <Input
+                                id="email"
+                                name="email"
+                                v-model="fields.email"
+                            />
                             <InputError :message="errors.email" />
                         </div>
                     </div>
                     <div class="flex justify-between">
-                        <div class="w-full flex flex-col gap-2 m-4">
+                        <div class="m-4 flex w-full flex-col gap-2">
                             <Label for="phone">Phone Number:</Label>
-                            <Input id="phone" name="phone" v-model="fields.phone" />
+                            <Input
+                                id="phone"
+                                name="phone"
+                                v-model="fields.phone"
+                            />
                             <InputError :message="errors.phone" />
                         </div>
-                        <div class="w-full flex flex-col gap-2 m-4">
+                        <div class="m-4 flex w-full flex-col gap-2">
                             <Label for="address">Address:</Label>
-                            <Input id="address" name="address" v-model="fields.address" />
+                            <Input
+                                id="address"
+                                name="address"
+                                v-model="fields.address"
+                            />
                             <InputError :message="errors.address" />
                         </div>
                     </div>
-                    <div class="flex justify-center m-4 gap-4">
-                        <Button :disabled="processing" class="w-1/4">{{ processing ? 'Saving...' : 'Save' }}</Button>
-                        <Link :href="patients.index()" class="w-1/4"><Button class="w-full">Cancel</Button></Link>
+                    <div class="m-4 flex justify-center gap-4">
+                        <Button :disabled="processing" class="w-1/4">{{
+                            processing ? 'Saving...' : 'Save'
+                        }}</Button>
+                        <Link :href="patients.index()" class="w-1/4"
+                            ><Button class="w-full">Cancel</Button></Link
+                        >
                     </div>
                 </Form>
             </Card>

@@ -37,6 +37,7 @@ class Doctor extends Model
             Cache::tags('doctors.index')->flush();
         });
     }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -67,12 +68,11 @@ class Doctor extends Model
         return $this->hasMany(FollowUp::class);
     }
 
-    public function scopeSearch(Builder $query, string|null $search): Builder
+    public function scopeSearch(Builder $query, ?string $search): Builder
     {
-        return $query->when($search, fn($query, $search) => $query->whereHas('user', fn($q) =>
-        $q->where('name', 'like', '%' . $search . '%')
-        ->orWhere('email', 'like', '%' . $search . '%')
-        ->orWhere('phone', 'like', '%' . $search . '%')));
+        return $query->when($search, fn ($query, $search) => $query->whereHas('user', fn ($q) => $q->where('name', 'like', '%'.$search.'%')
+            ->orWhere('email', 'like', '%'.$search.'%')
+            ->orWhere('phone', 'like', '%'.$search.'%')));
     }
 
     public function scopeIsActive(Builder $query): void

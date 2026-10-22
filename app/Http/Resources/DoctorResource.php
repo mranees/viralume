@@ -13,15 +13,15 @@ class DoctorResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-
     public static $wrap = null;
+
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'name' => $this->whenLoaded('user', fn()=>$this->user->name),
-            'email' => $this->whenLoaded('user', fn()=>$this->user->email),
-            'phone' => $this->whenLoaded('user', fn()=>$this->user->phone),
+            'name' => $this->whenLoaded('user', fn () => $this->user->name),
+            'email' => $this->whenLoaded('user', fn () => $this->user->email),
+            'phone' => $this->whenLoaded('user', fn () => $this->user->phone),
             'specializations' => SpecializationResource::collection($this->specializations)->resolve(),
             'bio' => $this->bio,
             'vizita_price' => $this->vizita_price,

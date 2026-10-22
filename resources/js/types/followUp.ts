@@ -4,4 +4,4 @@ export type FollowUp = {
     date: Date;
     time: Date;
     notes: string;
-}
+};

@@ -7,7 +7,6 @@ import {
     TableRow,
     TableBody,
     TableCell,
-
 } from '@/components/ui/table';
 import {
     Pagination,
@@ -42,25 +41,31 @@ defineOptions({
 });
 
 const props = defineProps<{
-    doctors: Doctor[],
+    doctors: Doctor[];
 }>();
 
 // for live search bar
 const search = ref<string | null>();
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
-watch(search, (value)=>{
+watch(search, (value) => {
     if (debounceTimer) clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-    router.get('/doctors', { search: value }, {preserveState: true, preserveScroll: true, only: ['doctors']});
-    }
-    , 500);
-})
+        router.get(
+            '/doctors',
+            { search: value },
+            { preserveState: true, preserveScroll: true, only: ['doctors'] },
+        );
+    }, 500);
+});
 
 // for pagination
-function goToPage(page: any)
-{
-    router.get('/doctors', { page }, {preserveState: true, preserveScroll: true, only: ['doctors']});
+function goToPage(page: any) {
+    router.get(
+        '/doctors',
+        { page },
+        { preserveState: true, preserveScroll: true, only: ['doctors'] },
+    );
 }
 
 // for modals
@@ -81,20 +86,30 @@ const confirmDelete = (doctorId: number) => {
         },
     });
 };
-
 </script>
 
 <template>
-    <Head variant="small" title="List of Doctors" dessciption="list of all doctors in the system" />
-    <div class="flex justify-between mx-8 my-2">
-        <div class="flex gap-2 items-center"><Input v-model="search" placeholder="Search..." /><Search /></div>
+    <Head
+        variant="small"
+        title="List of Doctors"
+        dessciption="list of all doctors in the system"
+    />
+    <div class="mx-8 my-2 flex justify-between">
+        <div class="flex items-center gap-2">
+            <Input v-model="search" placeholder="Search..." /><Search />
+        </div>
         <div class="flex">
-            <Link href="doctors/create"><Button><Plus /> New Doctor</Button></Link>
+            <Link href="doctors/create"
+                ><Button><Plus /> New Doctor</Button></Link
+            >
         </div>
     </div>
-    <div class="flex flex-col justify-center mx-8 ">
+    <div class="mx-8 flex flex-col justify-center">
         <Table class="w-full">
-            <TableCaption>Show {{ doctors.meta.from }} to {{ doctors.meta.to }} of {{ doctors.meta.total }}.</TableCaption>
+            <TableCaption
+                >Show {{ doctors.meta.from }} to {{ doctors.meta.to }} of
+                {{ doctors.meta.total }}.</TableCaption
+            >
             <TableHeader>
                 <TableRow class="uppercase">
                     <TableHead class="w-24 text-center">#</TableHead>
@@ -108,53 +123,88 @@ const confirmDelete = (doctorId: number) => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                <TableRow v-for="doctor in doctors.data" :key="'doctor-'+doctor.id">
+                <TableRow
+                    v-for="doctor in doctors.data"
+                    :key="'doctor-' + doctor.id"
+                >
                     <TableCell class="w-24">
-                        <img class="w-10 h-10 rounded-full mx-auto" :src="doctor.profile_image" alt="" />
+                        <img
+                            class="mx-auto h-10 w-10 rounded-full"
+                            :src="doctor.profile_image"
+                            alt=""
+                        />
                     </TableCell>
                     <TableCell class="">{{ doctor.name }}</TableCell>
                     <TableCell class="">{{ doctor.email }}</TableCell>
                     <TableCell class="">{{ doctor.phone }}</TableCell>
-                    <TableCell class=""><span v-for="spec in doctor.specializations" :key="'spec-'+spec.id">{{ spec.name }}, </span></TableCell>
-                    <TableCell class="w-32">{{ doctor.vizita_price }} EGP</TableCell>
-                    <TableCell class="w-32">{{ doctor.is_active ? 'Active' : 'Inactive' }}</TableCell>
-                    <TableCell class="flex justify-center items-center gap-4 text-white">
-                        <Link :href="doctorsroute.show(doctor.id)" alt="Show"><Eye class="text-blue-500 hover:text-blue-700" /></Link>
-                        <Link :href="doctorsroute.edit(doctor.id)" alt="Edit"><Pencil class="text-green-500 hover:text-green-700" /></Link>
-                        <ConfirmDeleteDialog
-                        v-model="openDialogId"
-                        :title="`Delete ${doctor.name}?`"
-                        description="Are you sure you want to delete this doctor? This action cannot be undone."
-                        :processing="deletingId === doctor.id"
-                        @confirm="confirmDelete(doctor.id)"
+                    <TableCell class=""
+                        ><span
+                            v-for="spec in doctor.specializations"
+                            :key="'spec-' + spec.id"
+                            >{{ spec.name }},
+                        </span></TableCell
                     >
-                            <Trash class="text-red-500 hover:text-red-700 crusor-pointer" />
-                    </ConfirmDeleteDialog>
+                    <TableCell class="w-32"
+                        >{{ doctor.vizita_price }} EGP</TableCell
+                    >
+                    <TableCell class="w-32">{{
+                        doctor.is_active ? 'Active' : 'Inactive'
+                    }}</TableCell>
+                    <TableCell
+                        class="flex items-center justify-center gap-4 text-white"
+                    >
+                        <Link :href="doctorsroute.show(doctor.id)" alt="Show"
+                            ><Eye class="text-blue-500 hover:text-blue-700"
+                        /></Link>
+                        <Link :href="doctorsroute.edit(doctor.id)" alt="Edit"
+                            ><Pencil
+                                class="text-green-500 hover:text-green-700"
+                        /></Link>
+                        <ConfirmDeleteDialog
+                            v-model="openDialogId"
+                            :title="`Delete ${doctor.name}?`"
+                            description="Are you sure you want to delete this doctor? This action cannot be undone."
+                            :processing="deletingId === doctor.id"
+                            @confirm="confirmDelete(doctor.id)"
+                        >
+                            <Trash
+                                class="crusor-pointer text-red-500 hover:text-red-700"
+                            />
+                        </ConfirmDeleteDialog>
                     </TableCell>
                 </TableRow>
             </TableBody>
         </Table>
     </div>
-    <div v-if="doctors.meta.total > doctors.meta.per_page" class="flex justify-end items-center me-4">
+    <div
+        v-if="doctors.meta.total > doctors.meta.per_page"
+        class="me-4 flex items-center justify-end"
+    >
         <div class="flex flex-col justify-end gap-6">
-            <Pagination v-slot="{ page }" :items-per-page="doctors.meta.per_page" :total="doctors.meta.total" :default-page="doctors.meta.current_page" @update:page="goToPage">
-            <PaginationContent v-slot="{ items }">
-                <PaginationPrevious />
+            <Pagination
+                v-slot="{ page }"
+                :items-per-page="doctors.meta.per_page"
+                :total="doctors.meta.total"
+                :default-page="doctors.meta.current_page"
+                @update:page="goToPage"
+            >
+                <PaginationContent v-slot="{ items }">
+                    <PaginationPrevious />
 
-                <template v-for="(item, index) in items" :key="index">
-                <PaginationItem
-                    v-if="item.type === 'page'"
-                    :value="item.value"
-                    :is-active="item.value === page"
-                >
-                    {{ item.value }}
-                </PaginationItem>
-                </template>
+                    <template v-for="(item, index) in items" :key="index">
+                        <PaginationItem
+                            v-if="item.type === 'page'"
+                            :value="item.value"
+                            :is-active="item.value === page"
+                        >
+                            {{ item.value }}
+                        </PaginationItem>
+                    </template>
 
-                <PaginationEllipsis :index="4" />
+                    <PaginationEllipsis :index="4" />
 
-                <PaginationNext />
-            </PaginationContent>
+                    <PaginationNext />
+                </PaginationContent>
             </Pagination>
         </div>
     </div>

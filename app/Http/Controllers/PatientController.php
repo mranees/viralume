@@ -14,7 +14,6 @@ class PatientController extends Controller
     /**
      * Display a listing of the resource.
      */
-
     protected PatientService $patientService;
 
     public function __construct(PatientService $patientService)
@@ -37,7 +36,7 @@ class PatientController extends Controller
     public function create()
     {
         return inertia('Patients/create', [
-            'patient' => new Patient(),
+            'patient' => new Patient,
         ]);
     }
 

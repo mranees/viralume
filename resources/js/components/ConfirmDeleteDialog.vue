@@ -52,16 +52,22 @@ const handleConfirm = () => {
             <slot />
         </AlertDialogTrigger>
 
-        <AlertDialogOverlay class ="fixed inset-0 bg-black/30 backdrop-blur-sm" />
+        <AlertDialogOverlay
+            class="fixed inset-0 bg-black/30 backdrop-blur-sm"
+        />
 
         <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle>{{ title }}</AlertDialogTitle>
-                <AlertDialogDescription>{{ description }}</AlertDialogDescription>
+                <AlertDialogDescription>{{
+                    description
+                }}</AlertDialogDescription>
             </AlertDialogHeader>
 
             <AlertDialogFooter>
-                <AlertDialogCancel :disabled="processing">{{ cancelText }}</AlertDialogCancel>
+                <AlertDialogCancel :disabled="processing">{{
+                    cancelText
+                }}</AlertDialogCancel>
                 <AlertDialogAction as-child>
                     <Button
                         variant="destructive"

@@ -5,6 +5,7 @@ A modern Laravel + Vue.js application for managing medical appointments, built w
 ## Features
 
 ### Authentication & Security
+
 - User registration, login, and password reset (via Laravel Fortify)
 - Email verification
 - Two-factor authentication (2FA)
@@ -13,6 +14,7 @@ A modern Laravel + Vue.js application for managing medical appointments, built w
 - Secure session management
 
 ### Core Functionality
+
 - **Patient Management**: Patient profiles linked to user accounts
 - **Doctor Management**: Doctor profiles with specialization, bio, pricing, and availability
 - **Appointment Scheduling**: Book, confirm, cancel, and complete appointments
@@ -20,12 +22,14 @@ A modern Laravel + Vue.js application for managing medical appointments, built w
 - **Time Off Management**: Track doctor absences and unavailability
 
 ### User Roles
+
 - **Admin**: Full system access
 - **Doctor**: Manage own schedule, view appointments
 - **Patient**: Book and manage appointments
 - **Receptionist**: Manage appointments and patient/doctor records
 
 ### Technology Stack
+
 - **Backend**: Laravel 13.x (PHP 8.4)
 - **Frontend**: Vue 3 + Inertia.js 3
 - **Styling**: Tailwind CSS 4
@@ -39,33 +43,33 @@ A modern Laravel + Vue.js application for managing medical appointments, built w
 
 1. Clone the repository
 2. Install PHP dependencies:
-   ```bash
-   composer install
-   ```
+    ```bash
+    composer install
+    ```
 3. Install Node.js dependencies:
-   ```bash
-   npm install
-   ```
+    ```bash
+    npm install
+    ```
 4. Copy the environment file:
-   ```bash
-   cp .env.example .env
-   ```
+    ```bash
+    cp .env.example .env
+    ```
 5. Generate application key:
-   ```bash
-   php artisan key:generate
-   ```
+    ```bash
+    php artisan key:generate
+    ```
 6. Configure your database in `.env` and run migrations:
-   ```bash
-   php artisan migrate
-   ```
+    ```bash
+    php artisan migrate
+    ```
 7. Start the development server:
-   ```bash
-   npm run dev
-   ```
-   In another terminal:
-   ```bash
-   php artisan serve
-   ```
+    ```bash
+    npm run dev
+    ```
+    In another terminal:
+    ```bash
+    php artisan serve
+    ```
 
 ## Usage
 

@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
 
         Specialization::factory(5)->create();
         Patient::factory(10)->create();
-        for ($i=0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $doctor = Doctor::factory()->create();
             $doctor->specializations()->attach(Specialization::all()->random(2));
         }
@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
         $listOfDoctors = Doctor::all()->pluck(['id', 'vizita_price']);
         $listOfPatients = Patient::all()->pluck('id');
         $listOfReceptients = User::where('role', 'receptionist')->get()->pluck('id');
-        for ($i=0; $i < $listOfDoctors->count(); $i++) {
+        for ($i = 0; $i < $listOfDoctors->count(); $i++) {
             Appointment::factory()->create([
                 'patient_id' => $listOfPatients[$i],
                 'doctor_id' => $listOfDoctors[$i]['id'],

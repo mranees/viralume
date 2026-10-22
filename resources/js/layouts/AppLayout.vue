@@ -11,16 +11,16 @@ const { breadcrumbs = [] } = defineProps<{
 }>();
 const page = usePage();
 watch(
-    () =>page.props.flash,
+    () => page.props.flash,
     (flash) => {
-        if(flash?.message){
-            toast.success(flash.message)
+        if (flash?.message) {
+            toast.success(flash.message);
         }
-        if(flash?.error){
-            toast.error(flash.error)
+        if (flash?.error) {
+            toast.error(flash.error);
         }
-    }
-)
+    },
+);
 </script>
 
 <template>

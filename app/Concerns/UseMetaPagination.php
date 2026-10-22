@@ -4,7 +4,6 @@ namespace App\Concerns;
 
 trait UseMetaPagination
 {
-
     public function getMetaPaginationData($paginated): array
     {
         return [
