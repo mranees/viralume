@@ -9,9 +9,14 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout code
@@ -22,7 +27,9 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
         with:
-          php-version: '8.3'
+          php-version: '8.4'
+          extensions: mbstring, xml, dom, simplexml, xmlwriter, libxml, ctype, fileinfo, iconv, openssl, curl, zip, bcmath, pdo, pdo_sqlite, sqlite3
+          ini-values: memory_limit=512M
           tools: composer:v2
           coverage: none
 
@@ -30,6 +37,9 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
+
+      - name: Prepare SQLite database
+        run: touch database/database.sqlite
 
       - name: Setup Application
         run: composer setup
