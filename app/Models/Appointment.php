@@ -11,13 +11,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['patient_id', 'doctor_id', 'booked_by_id', 'date', 'time', 'status', 'total_cost', 'notes'])]
+#[Fillable(['patient_id', 'doctor_id', 'booked_by_id', 'date', 'starts_at', 'status', 'total_cost', 'notes'])]
 class Appointment extends Model
 {
     /** @use HasFactory<AppointmentFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $with = ['patient', 'doctor', 'bookedBy'];
+    protected $with = ['patient.user:id,name', 'doctor.user:id,name', 'bookedBy:id,name'];
+
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+            'total_cost' => 'decimal:2',
+            'status' => AppointmentStatus::class,
+        ];
+    }
+
 
     public function patient(): BelongsTo
     {
@@ -37,15 +47,5 @@ class Appointment extends Model
     public function followUp(): HasOne
     {
         return $this->hasOne(FollowUp::class);
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'date' => 'date',
-            'time' => 'time',
-            'total_cost' => 'decimal:2',
-            'status' => AppointmentStatus::class,
-        ];
     }
 }

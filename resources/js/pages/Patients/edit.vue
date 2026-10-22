@@ -36,12 +36,12 @@ defineOptions({
                 href: '/',
             },
             {
-                title: 'Doctors',
-                href: '/doctors',
+                title: 'Patients',
+                href: '/patients',
             },
             {
-                title: 'Edit Doctor',
-                href: 'doctors/{doctor.id}/edit',
+                title: 'Edit Patient',
+                href: 'patients/{patient.id}/edit',
             },
         ],
     },

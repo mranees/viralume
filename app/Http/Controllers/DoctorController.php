@@ -54,7 +54,9 @@ class DoctorController extends Controller
 
         $this->doctorService->store($validated);
 
-        return redirect()->route('doctors.index')->with('message', 'Doctor created successfully');
+        $lastpage = (int) ceil(Doctor::count() / 10);
+
+        return redirect()->route('doctors.index', ['page' => $lastpage])->with('message', 'Doctor created successfully');
     }
 
     /**
@@ -94,7 +96,6 @@ class DoctorController extends Controller
      */
     public function destroy(Doctor $doctor)
     {
-
         $this->doctorService->delete($doctor);
 
         return back()->with('message', 'Doctor deleted successfully');

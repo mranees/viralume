@@ -1,25 +1,13 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button';
 import Card from '@/components/ui/card/Card.vue';
-import Checkbox from '@/components/ui/checkbox/Checkbox.vue';
 import Input from '@/components/ui/input/Input.vue';
-import InputError from '@/components/InputError.vue';
 import Label from '@/components/ui/label/Label.vue';
-import Switch from '@/components/ui/switch/Switch.vue';
-import { Textarea } from '@/components/ui/textarea';
-import patients from '@/routes/patients';
+import InputError from '@/components/InputError.vue';
 import { Form, Link } from '@inertiajs/vue3';
-import { ref, watch } from 'vue';
-import { CheckboxGroupRoot } from 'reka-ui';
 import { MoveLeft } from '@lucide/vue';
-
-interface Patient {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-}
+import patients from '@/routes/patients';
+import { Patient } from '@/types/patient';
 
 const props = defineProps<{
     patient: Patient;
@@ -44,18 +32,13 @@ defineOptions({
     },
 });
 
-const logdata = (data: Record<string, any>) => {
-    console.log(data);
-    return data;
-};
-
 </script>
 
 <template>
     <div class=" w-full flex flex-col justify-center items-center mx-8 ">
         <div class="w-1/2 my-4 text-center">
             <Card>
-                <Form v-bind="patients.store.form()" :transform="logdata" v-slot="{processing, errors}">
+                <Form v-bind="patients.store.form()" v-slot="{processing, errors}">
                     <div class="flex justify-between m-4">
                     <div class="flex justify-start">
                         <Link :href="patients.index()" class="flex items-center gap-2"><MoveLeft color="white" /> Back</Link>

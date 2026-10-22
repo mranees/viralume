@@ -16,11 +16,10 @@ class PatientResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->user->name,
-            'email' => $this->user->email,
-            'phone' => $this->user->phone,
+            'name' => $this->whenLoaded('user', fn()=>$this->user?->name),
+            'email' => $this->whenLoaded('user', fn()=>$this->user?->email),
+            'phone' => $this->whenLoaded('user', fn()=>$this->user?->phone),
             'address' => $this->address,
-            // 'followUps' => FollowUpResource::collection( $this->followUps)
         ];
     }
 }
