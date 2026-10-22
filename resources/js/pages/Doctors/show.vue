@@ -62,8 +62,8 @@ const confirmDelete = (doctorId: number) => {
 <template>
     <Head
         variant="small"
-        title="Showing Doctor {{ props.doctor.name }}"
-        dessciption="showing doctor {{ props.doctor.name }} details."
+        title="Showing Doctor"
+        dessciption="showing doctor details."
     />
     <div class="mx-8 flex w-full flex-col items-center justify-center">
         <div class="my-4 w-2/3 text-center">
@@ -77,7 +77,7 @@ const confirmDelete = (doctorId: number) => {
                 </div>
                 <h1>Details of Doctor "{{ props.doctor.name }}"</h1>
                 <img
-                    :src="props.doctor.profile_image"
+                    :src="props.doctor.profile_image ?? undefined"
                     class="m-auto flex h-48 w-48 items-center justify-center rounded-full border border-blue-500"
                 />
                 <div class="flex w-full items-start justify-between">
@@ -181,7 +181,7 @@ const confirmDelete = (doctorId: number) => {
                                             class="text-green-500 hover:text-green-700"
                                     /></Link>
                                     <ConfirmDeleteDialog
-                                        v-model:open="openDialogId"
+                                        v-model="openDialogId"
                                         :title="`Delete ${doctor.name}?`"
                                         description="Are you sure you want to delete this doctor? This action cannot be undone."
                                         :processing="deletingId === doctor.id"

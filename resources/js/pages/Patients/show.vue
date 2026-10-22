@@ -9,17 +9,17 @@ import {
     TableCell,
 } from '@/components/ui/table';
 import Card from '@/components/ui/card/Card.vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { MoveLeft, Pencil, Trash } from '@lucide/vue';
 import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 import { ref } from 'vue';
 import patients from '@/routes/patients';
-import { FollowUp } from '@/types/followUp';
-import { Patient } from '@/types/patient';
+import { Patient, FollowUp } from '@/types/patient';
+import type { Paginated } from '@/types/pagination';
 
 const props = defineProps<{
     patient: Patient;
-    patientFollowUps: FollowUp;
+    patientFollowUps: Paginated<FollowUp>;
 }>();
 
 defineOptions({
@@ -61,6 +61,11 @@ const confirmDelete = (patientId: number) => {
 };
 </script>
 <template>
+    <Head
+        variant="small"
+        title="Showing Patient"
+        dessciption="showing patient details."
+    />
     <div class="mx-8 flex w-full flex-col items-center justify-center">
         <div class="my-4 w-2/3 text-center">
             <Card>
@@ -187,7 +192,7 @@ const confirmDelete = (patientId: number) => {
                                             class="text-green-500 hover:text-green-700"
                                     /></Link>
                                     <ConfirmDeleteDialog
-                                        v-model:open="openDialogId"
+                                        v-model="openDialogId"
                                         :title="`Delete ${patient.name}?`"
                                         description="Are you sure you want to delete this patient? This action cannot be undone."
                                         :processing="deletingId === patient.id"

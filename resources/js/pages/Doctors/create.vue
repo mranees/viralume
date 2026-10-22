@@ -13,8 +13,7 @@ import { Form, Head, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { CheckboxGroupRoot } from 'reka-ui';
 import { MoveLeft, X } from '@lucide/vue';
-import type { Doctor } from '@/types/doctor';
-import type { Specialization } from '@/types/specialization';
+import type { Doctor, Specialization } from '@/types/doctor';
 import { useImagePreview } from '@/composables/useImagePreview';
 
 defineProps<{
@@ -77,11 +76,11 @@ const logdata = (data: Record<string, any>) => {
                     <div class="mx-auto flex w-48 flex-col gap-0">
                         <Button
                             @click.prevent="clear()"
-                            class="z-10 mb-[-2rem] h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200"
+                            class="z-10 -mb-8 h-8 w-8 rounded-full bg-gray-100 hover:bg-gray-200"
                             ><X class="h-4 w-4 text-black"
                         /></Button>
                         <img
-                            :src="preview"
+                            :src="preview ?? undefined"
                             class="m-auto flex h-48 w-48 items-center justify-center rounded-full border border-blue-500"
                         />
                     </div>

@@ -20,10 +20,11 @@ import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 import { Eye, Pencil, Plus, Search, Trash } from '@lucide/vue';
-import { Link, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 import patientsroute from '@/routes/patients';
-import { Patient } from '@/types/patient';
+import type { Patient } from '@/types/patient';
+import type { Paginated } from '@/types/pagination';
 
 defineOptions({
     layout: {
@@ -40,9 +41,7 @@ defineOptions({
     },
 });
 
-const props = defineProps<{
-    patients: Patient[];
-}>();
+const props = defineProps<{ patients: Paginated<Patient> }>();
 
 const search = ref<string | null>();
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -88,6 +87,11 @@ const confirmDelete = (patientId: number) => {
 </script>
 
 <template>
+    <Head
+        variant="small"
+        title="List of Patients"
+        dessciption="list of all patients in the system"
+    />
     <div class="mx-8 my-2 flex justify-between">
         <div class="flex items-center gap-2">
             <Input v-model="search" placeholder="Search..." /><Search />

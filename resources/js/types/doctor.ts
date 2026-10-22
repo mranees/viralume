@@ -1,4 +1,7 @@
-import { Specialization } from './specialization';
+export type Specialization = {
+    id: number;
+    name: string;
+};
 
 export type Doctor = {
     id: number;

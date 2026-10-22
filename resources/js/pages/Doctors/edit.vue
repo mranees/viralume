@@ -14,8 +14,7 @@ import doctors from '@/routes/doctors';
 import storage from '@/routes/storage';
 import { Form, Head, Link } from '@inertiajs/vue3';
 import { reactive, ref } from 'vue';
-import type { Doctor } from '@/types/doctor';
-import type { Specialization } from '@/types/specialization';
+import type { Doctor, Specialization } from '@/types/doctor';
 import { useImagePreview } from '@/composables/useImagePreview';
 
 defineOptions({
@@ -72,8 +71,8 @@ const clearAll = () => {
 <template>
     <Head
         variant="small"
-        title="Editing Doctor {{ doctor.name }}"
-        description="Update the information for doctor {{ doctor.name }}."
+        title="Editing Doctor"
+        description="Update the information of doctor."
     />
     <div class="mx-8 flex w-full flex-col items-center justify-center">
         <div class="my-4 w-1/2 text-center">
@@ -98,7 +97,7 @@ const clearAll = () => {
                             ><X class="h-4 w-4 text-black"
                         /></Button>
                         <img
-                            :src="fields.profile_image"
+                            :src="fields.profile_image ?? undefined"
                             class="m-auto flex h-48 w-48 items-center justify-center rounded-full border border-blue-500"
                         />
                     </div>

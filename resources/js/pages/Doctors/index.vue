@@ -23,7 +23,8 @@ import { Eye, Pencil, Plus, Search, Trash } from '@lucide/vue';
 import { ref, watch } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import doctorsroute from '@/routes/doctors';
-import { Doctor } from '@/types/doctor';
+import type { Doctor } from '@/types/doctor';
+import type { Paginated } from '@/types/pagination';
 
 defineOptions({
     layout: {
@@ -40,9 +41,7 @@ defineOptions({
     },
 });
 
-const props = defineProps<{
-    doctors: Doctor[];
-}>();
+const props = defineProps<{ doctors: Paginated<Doctor> }>();
 
 // for live search bar
 const search = ref<string | null>();

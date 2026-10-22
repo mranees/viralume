@@ -4,18 +4,11 @@ import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import InputError from '@/components/InputError.vue';
 import Label from '@/components/ui/label/Label.vue';
-import { Form, Link, useForm, usePage } from '@inertiajs/vue3';
+import { Form, Head, Link } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 import { MoveLeft } from '@lucide/vue';
 import patients from '@/routes/patients';
-
-interface Patient {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-}
+import type { Patient } from '@/types/patient';
 
 const props = defineProps<{
     patient: Patient;
@@ -46,14 +39,14 @@ defineOptions({
         ],
     },
 });
-
-const logdata = (data: Record<string, any>) => {
-    console.log(data);
-    return data;
-};
 </script>
 
 <template>
+    <Head
+        variant="small"
+        title="Editing Doctor"
+        dessciption="pdate the information of patient"
+    />
     <div class="mx-8 flex w-full flex-col items-center justify-center">
         <div class="my-4 w-1/2 text-center">
             <Card>

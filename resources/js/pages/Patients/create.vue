@@ -4,12 +4,12 @@ import Card from '@/components/ui/card/Card.vue';
 import Input from '@/components/ui/input/Input.vue';
 import Label from '@/components/ui/label/Label.vue';
 import InputError from '@/components/InputError.vue';
-import { Form, Link } from '@inertiajs/vue3';
+import { Form, Head, Link } from '@inertiajs/vue3';
 import { MoveLeft } from '@lucide/vue';
 import patients from '@/routes/patients';
 import { Patient } from '@/types/patient';
 
-const props = defineProps<{
+defineProps<{
     patient: Patient;
 }>();
 
@@ -34,6 +34,11 @@ defineOptions({
 </script>
 
 <template>
+    <Head
+        variant="small"
+        title="Add New Patient"
+        dessciption="adding a new patient to the system"
+    />
     <div class="mx-8 flex w-full flex-col items-center justify-center">
         <div class="my-4 w-1/2 text-center">
             <Card>
