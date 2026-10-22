@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Button from '@/components/ui/button/Button.vue';
 import {
     Table,
     TableCaption,
@@ -9,21 +8,23 @@ import {
     TableBody,
     TableCell,
 
- } from '@/components/ui/table';
+} from '@/components/ui/table';
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationNext,
+    PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Eye, Pencil, Plus, Search, Trash } from '@lucide/vue';
-import { Link, router } from '@inertiajs/vue3';
+import Button from '@/components/ui/button/Button.vue';
 import Input from '@/components/ui/input/Input.vue';
 import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
-import patientsroute from '@/routes/patients';
+import { Eye, Pencil, Plus, Search, Trash } from '@lucide/vue';
+import { Link, router } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
+import patientsroute from '@/routes/patients';
+import { Patient } from '@/types/patient';
 
 defineOptions({
     layout: {
@@ -40,14 +41,6 @@ defineOptions({
     },
 });
 
-interface Patient {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-}
-
 const props = defineProps<{
     patients: Patient[];
 }>();
@@ -58,7 +51,7 @@ let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 watch(search, (value)=>{
     if (debounceTimer) clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-    router.get('/doctors', { search: value }, {preserveState: true, preserveScroll: true, only: ['patients']});
+    router.get('/patients', { search: value }, {preserveState: true, preserveScroll: true, only: ['patients']});
     }
     , 500);
 })
@@ -67,11 +60,6 @@ function goToPage(page: any)
 {
     router.get('/patients', { page }, {preserveState: true, preserveScroll: true, only: ['patients']});
 }
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> 5d6cb72 (still ading test cases)
 
 // for modals
 const deletingId = ref<number | null>(null);
@@ -93,11 +81,6 @@ const confirmDelete = (patientId: number) => {
     });
 };
 
-<<<<<<< HEAD
-console.log(JSON.stringify(props.patients));
-=======
->>>>>>> Stashed changes
->>>>>>> 5d6cb72 (still ading test cases)
 </script>
 
 <template>
@@ -116,7 +99,6 @@ console.log(JSON.stringify(props.patients));
                     <TableHead>Email</TableHead>
                     <TableHead>Phone</TableHead>
                     <TableHead>Address</TableHead>
-                    <!-- <TableHead>Follow Ups</TableHead> -->
                     <TableHead class="text-center">Actions</TableHead>
                 </TableRow>
             </TableHeader>
@@ -126,13 +108,11 @@ console.log(JSON.stringify(props.patients));
                     <TableCell class="w-[15%]">{{ patient.email }}</TableCell>
                     <TableCell class="w-[15%]">{{ patient.phone }}</TableCell>
                     <TableCell>{{ patient.address }}</TableCell>
-                    <!-- <TableCell v-if="patient.followUps.length"><span v-for="followUp in patient.followUps" :key="'followup-'+followUp.id">- Doctor: {{ followUp.patient }} @ Date: {{ followUp.date }} {{ followUp.time }}<br /> Notes: {{ followUp.notes }}, <br /></span></TableCell>
-                    <TableCell class="text-center" v-else><span class="text-center">No Follow Up Yet.</span></TableCell> -->
                     <TableCell class="flex justify-center gap-2 text-white">
                         <Link :href="patientsroute.show(patient.id)" alt="Show"><Eye class="text-blue-500 hover:text-blue-700" /></Link>
                         <Link :href="patientsroute.edit(patient.id)" alt="Edit"><Pencil class="text-green-500 hover:text-green-700" /></Link>
                         <ConfirmDeleteDialog
-                        v-model:open="openDialogId"
+                        v-model="openDialogId"
                         :title="`Delete ${patient.name}?`"
                         description="Are you sure you want to delete this Patient? This action cannot be undone."
                         :processing="deletingId === patient.id"
@@ -170,7 +150,3 @@ console.log(JSON.stringify(props.patients));
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

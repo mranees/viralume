@@ -17,9 +17,9 @@ class FollowUpResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'doctor' => $this->doctor->user->name,
-            'date' => Carbon::parse($this->appointment->date)->format('Y-m-d'),
-            'time' => Carbon::parse($this->appointment->starts_at)->format('H:i'),
+            'doctor' => $this->whenLoaded('doctor', fn()=>$this->doctor?->user->name),
+            'date' => $this->whenLoaded('appointment', fn()=>$this->appointment?->date?->format('Y-m-d')),
+            'time' => $this->whenLoaded('appointment', fn()=>$this->appointment->starts_at ? Carbon::parse($this->appointment->starts_at)->format('H:i') : null),
             'notes' => $this->notes,
         ];
     }

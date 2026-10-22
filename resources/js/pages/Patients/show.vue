@@ -7,26 +7,19 @@ import {
     TableRow,
     TableBody,
     TableCell,
-
 } from '@/components/ui/table';
 import Card from '@/components/ui/card/Card.vue';
-import doctors from '@/routes/doctors';
 import { Link, router } from '@inertiajs/vue3';
 import { MoveLeft, Pencil, Trash } from '@lucide/vue';
 import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 import { ref } from 'vue';
 import patients from '@/routes/patients';
-
-interface Patient {
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-}
+import { FollowUp } from '@/types/followUp';
+import { Patient } from '@/types/patient';
 
 const props = defineProps<{
     patient: Patient;
+    patientFollowUps: FollowUp
 }>();
 
 defineOptions({
@@ -37,12 +30,12 @@ defineOptions({
                 href: '/',
             },
             {
-                title: 'Doctors',
-                href: '/doctors',
+                title: 'Patients',
+                href: '/patients',
             },
             {
-                title: 'Show Doctor',
-                href: '/doctors/{doctor.id}/show',
+                title: 'Show Patient',
+                href: '/patients/{patient.id}/show',
             },
         ],
     }
@@ -55,7 +48,7 @@ const openDialogId = ref<number | null>(null);
 const confirmDelete = (patientId: number) => {
     deletingId.value = patientId;
 
-    router.delete(doctors.destroy(patientId).url, {
+    router.delete(patients.destroy(patientId).url, {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => {
@@ -72,11 +65,11 @@ const confirmDelete = (patientId: number) => {
         <div class="w-2/3 my-4 text-center">
             <Card>
                 <div class="flex justify-start w-full ms-4">
-                    <Link :href="doctors.index()" class="flex items-center gap-2"><MoveLeft color="white" /> Back</Link>
+                    <Link :href="patients.index()" class="flex items-center gap-2"><MoveLeft color="white" /> Back</Link>
                 </div>
-                <h1>Details of Doctor "{{ props.patient.name }}"</h1>
+                <h1>Details of Patient "{{ props.patient.name }}"</h1>
                 <div class="w-full flex justify-between items-start">
-                    <div class="w-1/3 text-left flex flex-col gap-2 m-4">
+                    <div class="w-full text-left flex flex-col gap-2 m-4">
                         <div class="w-full flex gap-2 items-center">
                             <div class="font-bold text-lg ">Name:</div>
                             <div class="w-full">{{ props.patient.name }}</div>
@@ -96,9 +89,31 @@ const confirmDelete = (patientId: number) => {
                     </div>
                 </div>
                 <div class="w-full flex flex-col justify-start text-left p-4">
+                    <h1>Patient FollowUps:</h1>
+                    <Table class="">
+                        <TableCaption>Show {{ patientFollowUps.meta.from }} to {{ patientFollowUps.meta.to }} of {{ patientFollowUps.meta.total }}.</TableCaption>
+                        <TableHeader>
+                            <TableRow class="uppercase">
+                                <TableHead>Date</TableHead>
+                                <TableHead>Time</TableHead>
+                                <TableHead>Doctor</TableHead>
+                                <TableHead>Notes</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow v-for="followup in patientFollowUps.data">
+                                <TableCell class="">{{ followup.date }}</TableCell>
+                                <TableCell class="">{{ followup.time }}</TableCell>
+                                <TableCell class="w-[20%]">{{ followup.doctor }}</TableCell>
+                                <TableCell class="">{{ followup.notes }}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </div>
+                <div class="w-full flex flex-col justify-start text-left p-4">
                     <h1>Patient Schedules:</h1>
                     <Table class="">
-                        <TableCaption>Show {{ 'patient.meta.from' }} to {{ 'patient.meta.to' }} of {{ 'patient.meta.total' }}.</TableCaption>
+                        <TableCaption>Show {{ 'follow.meta.from' }} to {{ 'patient.meta.to' }} of {{ 'patient.meta.total' }}.</TableCaption>
                         <TableHeader>
                             <TableRow class="uppercase">
                                 <TableHead>Date</TableHead>

@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Concerns\UseMetaPagination;
 use App\Enum\UsersRoles;
 use App\Http\Resources\DoctorResource;
+use App\Http\Resources\FollowUpResource;
 use App\Http\Resources\PatientResource;
 use App\Models\Doctor;
 use App\Models\Patient;
@@ -14,6 +16,7 @@ use Illuminate\Http\Request;
 
 class PatientService
 {
+    use UseMetaPagination;
     /**
      * Create a new class instance.
      */
@@ -31,14 +34,7 @@ class PatientService
 
             return [
                 'data' => PatientResource::collection($patients->items())->resolve(),
-                'meta' => [
-                    'current_page' => $patients->currentPage(),
-                    'from' => $patients->firstItem(),
-                    'to' => $patients->lastItem(),
-                    'last_page' => $patients->lastPage(),
-                    'total' => $patients->total(),
-                    'per_page' => $patients->perPage(),
-                ],
+                'meta' => $this->getMetaPaginationData($patients),
             ];
         } else {
             $patients = Cache::remember($key, 5, function () {
@@ -46,14 +42,7 @@ class PatientService
 
                 return [
                     'data' => PatientResource::collection($paginated->items())->resolve(),
-                    'meta' => [
-                        'current_page' => $paginated->currentPage(),
-                        'from' => $paginated->firstItem(),
-                        'to' => $paginated->lastItem(),
-                        'last_page' => $paginated->lastPage(),
-                        'total' => $paginated->total(),
-                        'per_page' => $paginated->perPage(),
-                    ],
+                    'meta' => $this->getMetaPaginationData($paginated),
                 ];
             });
         }
@@ -61,42 +50,58 @@ class PatientService
         return $patients;
     }
 
-    public function store (array $data):void
+    public function store(array $data): void
     {
         DB::transaction(function () use ($data) {
 
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-            'password' => bcrypt('password'),
-            'role' => UsersRoles::PATIENT,
-        ]);
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'],
+                'password' => bcrypt('password'),
+                'role' => UsersRoles::PATIENT,
+            ]);
 
-        Patient::create([
-            'user_id' => $user->id,
-            'address' => $data['address'],
-        ]);
-
+            Patient::create([
+                'user_id' => $user->id,
+                'address' => $data['address'],
+            ]);
         });
+    }
 
+    public function show(Patient $patient): array
+    {
+        $patientData = new PatientResource($patient)->resolve();
+        $paginated = $patient->followUps()->latest()->paginate(10);
+        $patientFollowUps = [
+            'data' => FollowUpResource::collection($paginated)->resolve(),
+            'meta' => $this->getMetaPaginationData($paginated),
+        ];
+        // dd($patientData, $paginated, $patientFollowUps);
+        return [
+            'patient' => $patientData,
+            'followUps' => $patientFollowUps,
+        ];
     }
 
     public function update(Patient $patient, array $data)
     {
-        DB::transaction(function () use ($patient,$data) {
-        $patient->user()->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'],
-        ]);
+        DB::transaction(function () use ($patient, $data) {
 
-        $patient->update([
-            'address' => $data['address'],
-        ]);
+            $patient->user()->update([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'],
+            ]);
 
+            $patient->update([
+                'address' => $data['address'],
+            ]);
         });
-
     }
 
+    public function delete(Patient $patient)
+    {
+        DB::transaction(fn() => $patient->delete());
+    }
 }

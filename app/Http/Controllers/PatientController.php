@@ -21,6 +21,7 @@ class PatientController extends Controller
     {
         $this->patientService = $patientService;
     }
+
     public function index(Request $request)
     {
         $patients = $this->patientService->index($request);
@@ -36,7 +37,7 @@ class PatientController extends Controller
     public function create()
     {
         return inertia('Patients/create', [
-            'patient' => new Patient,
+            'patient' => new Patient(),
         ]);
     }
 
@@ -49,7 +50,9 @@ class PatientController extends Controller
 
         $this->patientService->store($validated);
 
-        return redirect()->route('patients.index')->with('message', 'Patient created successfully');
+        $lastpage = (int) ceil(Patient::count() / 10);
+
+        return redirect()->route('patients.index', ['page' => $lastpage])->with('message', 'Patient created successfully');
     }
 
     /**
@@ -57,8 +60,11 @@ class PatientController extends Controller
      */
     public function show(Patient $patient)
     {
+        $patientData = $this->patientService->show($patient);
+
         return inertia('Patients/show', [
-            'patient' => new PatientResource($patient)->resolve(),
+            'patient' => $patientData['patient'],
+            'patientFollowUps' => $patientData['followUps'],
         ]);
     }
 
@@ -89,7 +95,7 @@ class PatientController extends Controller
      */
     public function destroy(Patient $patient)
     {
-        $patient->delete();
+        $this->patientService->delete($patient);
 
         return back()->with('message', 'Patient deleted successfully');
     }

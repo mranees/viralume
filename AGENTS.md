@@ -1,4 +1,15 @@
 <laravel-boost-guidelines>
+
+=== thinking rules ===
+
+# Rules
+- Reply in Arabic, short and direct. Keep code and identifiers in English.
+- Do only what the user asked. Do not look for other problems.
+- Read only the files needed. Do not scan the whole project unless asked.
+- If the user says a problem is fixed, treat it as closed and never investigate it again.
+- If you need information you cannot see (editor settings, extensions, UI), say so and ask. Do not guess.
+- Do not repeat yourself. When done, give a 2-3 line summary.
+
 === foundation rules ===
 
 # Laravel Boost Guidelines

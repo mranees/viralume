@@ -14,7 +14,7 @@ class FollowUp extends Model
     /** @use HasFactory<FollowUpFactory> */
     use HasFactory;
 
-    protected $with = ['patient', 'doctor', 'appointment'];
+    protected $with = ['appointment:id,date,starts_at', 'doctor.user:id,name'];
 
     public function patient(): BelongsTo
     {

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Concerns\UseMetaPagination;
 use App\Concerns\UseProfileImage;
 use App\Enum\UsersRoles;
 use App\Http\Resources\DoctorResource;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 class DoctorService
 {
-    use UseProfileImage;
+    use UseProfileImage, UseMetaPagination;
     /**
      * Create a new class instance.
      */
@@ -33,14 +34,7 @@ class DoctorService
 
             return [
                 'data' => DoctorResource::collection($doctors->items())->resolve(),
-                'meta' => [
-                    'current_page' => $doctors->currentPage(),
-                    'from' => $doctors->firstItem(),
-                    'to' => $doctors->lastItem(),
-                    'last_page' => $doctors->lastPage(),
-                    'total' => $doctors->total(),
-                    'per_page' => $doctors->perPage(),
-                ],
+                'meta' => $this->getMetaPaginationData($doctors),
             ];
         } else {
             $doctors = Cache::tags('doctors.index')->remember($key, 5, function () {
@@ -48,19 +42,10 @@ class DoctorService
 
                 return [
                     'data' => DoctorResource::collection($paginated->items())->resolve(),
-                    'meta' => [
-                        'current_page' => $paginated->currentPage(),
-                        'from' => $paginated->firstItem(),
-                        'to' => $paginated->lastItem(),
-                        'last_page' => $paginated->lastPage(),
-                        'total' => $paginated->total(),
-                        'per_page' => $paginated->perPage(),
-                    ],
+                    'meta' => $this->getMetaPaginationData($paginated),
                 ];
             });
         }
-
-
 
         return $doctors;
     }

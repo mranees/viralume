@@ -17,8 +17,8 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination';
-import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 import Button from '@/components/ui/button/Button.vue';
+import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 import Input from '@/components/ui/input/Input.vue';
 import { Eye, Pencil, Plus, Search, Trash } from '@lucide/vue';
 import { ref, watch } from 'vue';
@@ -30,20 +30,10 @@ defineOptions({
     layout: {
         breadcrumbs: [
             {
-<<<<<<< HEAD
-                title: 'Dashboard',
-                href: '/',
-            },
-            {
-=======
-<<<<<<< Updated upstream
-=======
                 title: 'Dashboard',
                 href: '/dashboard',
             },
             {
->>>>>>> Stashed changes
->>>>>>> 5d6cb72 (still ading test cases)
                 title: 'Doctors',
                 href: '/doctors',
             },
@@ -107,7 +97,7 @@ const confirmDelete = (doctorId: number) => {
             <TableCaption>Show {{ doctors.meta.from }} to {{ doctors.meta.to }} of {{ doctors.meta.total }}.</TableCaption>
             <TableHeader>
                 <TableRow class="uppercase">
-                    <TableHead class="text-center">#</TableHead>
+                    <TableHead class="w-24 text-center">#</TableHead>
                     <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Phone</TableHead>
@@ -119,52 +109,27 @@ const confirmDelete = (doctorId: number) => {
             </TableHeader>
             <TableBody>
                 <TableRow v-for="doctor in doctors.data" :key="'doctor-'+doctor.id">
-<<<<<<< HEAD
-=======
-<<<<<<< Updated upstream
-                    <TableCell><img class="w-10 h-10 rounded-full" :src="'https://i.pravatar.cc/300?img='+rand(1,70)" alt="" /></TableCell>
-                    <TableCell class="w-[10%]">{{ doctor.name }}</TableCell>
-                    <TableCell class="w-[10%]">{{ doctor.email }}</TableCell>
-                    <TableCell class="w-[10%]">{{ doctor.phone }}</TableCell>
-                    <TableCell class="w-[10%]"><span v-for="spec in doctor.specializations" :key="'spec-'+spec.id">{{ spec.name }}, </span></TableCell>
-                    <TableCell class="w-[25%] text-ellipsis">{{ doctor.bio }}</TableCell>
-                    <TableCell>{{ doctor.vizita_price }} EGP</TableCell>
-                    <TableCell class="flex justify-center gap-2 text-white">
-                        <Button><Eye /> Show</Button>
-                        <Button class="bg-green-500"><Pencil /> Edit</Button>
-                        <Button class="bg-red-500 text-white"><Trash /> Delete</Button>
-=======
->>>>>>> 5d6cb72 (still ading test cases)
-                    <TableCell class="w-24"><img class="w-10 h-10 rounded-full" :src="doctor.profile_image" alt="" /></TableCell>
-                    <TableCell class="w-[15%]">{{ doctor.name }}</TableCell>
-                    <TableCell class="w-[15%]">{{ doctor.email }}</TableCell>
-                    <TableCell class="w-[15%]">{{ doctor.phone }}</TableCell>
-                    <TableCell class="w-[15%]"><span v-for="spec in doctor.specializations" :key="'spec-'+spec.id">{{ spec.name }}, </span></TableCell>
-                    <TableCell class="w-[15%]">{{ doctor.vizita_price }} EGP</TableCell>
-                    <TableCell class="w-[15%]">{{ doctor.is_active ? 'Active' : 'Inactive' }}</TableCell>
+                    <TableCell class="w-24">
+                        <img class="w-10 h-10 rounded-full mx-auto" :src="doctor.profile_image" alt="" />
+                    </TableCell>
+                    <TableCell class="">{{ doctor.name }}</TableCell>
+                    <TableCell class="">{{ doctor.email }}</TableCell>
+                    <TableCell class="">{{ doctor.phone }}</TableCell>
+                    <TableCell class=""><span v-for="spec in doctor.specializations" :key="'spec-'+spec.id">{{ spec.name }}, </span></TableCell>
+                    <TableCell class="w-32">{{ doctor.vizita_price }} EGP</TableCell>
+                    <TableCell class="w-32">{{ doctor.is_active ? 'Active' : 'Inactive' }}</TableCell>
                     <TableCell class="flex justify-center items-center gap-4 text-white">
                         <Link :href="doctorsroute.show(doctor.id)" alt="Show"><Eye class="text-blue-500 hover:text-blue-700" /></Link>
                         <Link :href="doctorsroute.edit(doctor.id)" alt="Edit"><Pencil class="text-green-500 hover:text-green-700" /></Link>
-<<<<<<< HEAD
-=======
-                            {{ doctor.id }}
->>>>>>> 5d6cb72 (still ading test cases)
                         <ConfirmDeleteDialog
-                        v-model:open="openDialogId"
+                        v-model="openDialogId"
                         :title="`Delete ${doctor.name}?`"
                         description="Are you sure you want to delete this doctor? This action cannot be undone."
                         :processing="deletingId === doctor.id"
                         @confirm="confirmDelete(doctor.id)"
                     >
-<<<<<<< HEAD
-
                             <Trash class="text-red-500 hover:text-red-700 crusor-pointer" />
                     </ConfirmDeleteDialog>
-=======
-                            <Trash class="text-red-500 hover:text-red-700 crusor-pointer" />
-                    </ConfirmDeleteDialog>
->>>>>>> Stashed changes
->>>>>>> 5d6cb72 (still ading test cases)
                     </TableCell>
                 </TableRow>
             </TableBody>
@@ -194,7 +159,3 @@ const confirmDelete = (doctorId: number) => {
         </div>
     </div>
 </template>
-
-<style lang="scss" scoped>
-
-</style>

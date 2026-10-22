@@ -19,7 +19,7 @@ class Doctor extends Model
     /** @use HasFactory<DoctorFactory> */
     use HasFactory;
 
-    protected $with = ['user'];
+    protected $with = ['user:id,name,email,phone'];
 
     protected function casts(): array
     {
