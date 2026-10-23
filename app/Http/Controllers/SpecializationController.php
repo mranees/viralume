@@ -12,13 +12,13 @@ use Inertia\Response;
 
 class SpecializationController extends Controller
 {
-
     protected SpecializationService $specializationService;
 
     public function __construct(SpecializationService $specializationService)
     {
         $this->specializationService = $specializationService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -37,7 +37,7 @@ class SpecializationController extends Controller
     public function create(): Response
     {
         return inertia('Specializations/create', [
-            'specialization' => new Specialization(),
+            'specialization' => new Specialization,
         ]);
     }
 
@@ -49,6 +49,7 @@ class SpecializationController extends Controller
         $validated = $request->validated();
         $this->specializationService->store($validated);
         $lastpage = (int) ceil(Specialization::count() / 10);
+
         return redirect()->route('specializations.index', ['page' => $lastpage])->with('message', 'Specialization created successfully');
     }
 
@@ -69,6 +70,7 @@ class SpecializationController extends Controller
     {
         $validated = $request->validated();
         $this->specializationService->update($specialization, $validated);
+
         return redirect()->route('specializations.index')->with('message', 'Specialization updated successfully');
     }
 
