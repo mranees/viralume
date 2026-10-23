@@ -2,8 +2,14 @@
 
 namespace App\Concerns;
 
+use Illuminate\Pagination\LengthAwarePaginator;
+
 trait UseMetaPagination
 {
+    /**
+     * @param  LengthAwarePaginator<int, mixed>  $paginated
+     * @return array<string, mixed>
+     */
     public function getMetaPaginationData($paginated): array
     {
         return [

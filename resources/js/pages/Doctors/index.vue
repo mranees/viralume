@@ -129,7 +129,7 @@ const confirmDelete = (doctorId: number) => {
                     <TableCell class="w-24">
                         <img
                             class="mx-auto h-10 w-10 rounded-full"
-                            :src="doctor.profile_image"
+                            :src="doctor.profile_image ?? undefined"
                             alt=""
                         />
                     </TableCell>

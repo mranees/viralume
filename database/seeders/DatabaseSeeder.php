@@ -37,9 +37,9 @@ class DatabaseSeeder extends Seeder
         }
         Appointment::factory(20)->create();
         FollowUp::factory(20)->create();
-        $listOfDoctors = Doctor::all()->pluck(['id', 'vizita_price']);
-        $listOfPatients = Patient::all()->pluck('id');
-        $listOfReceptients = User::where('role', 'receptionist')->get()->pluck('id');
+        $listOfDoctors = Doctor::query()->get(['id', 'vizita_price']);
+        $listOfPatients = Patient::query()->pluck('id');
+        $listOfReceptients = User::where('role', 'receptionist')->pluck('id');
         for ($i = 0; $i < $listOfDoctors->count(); $i++) {
             Appointment::factory()->create([
                 'patient_id' => $listOfPatients[$i],

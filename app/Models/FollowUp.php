@@ -16,16 +16,19 @@ class FollowUp extends Model
 
     protected $with = ['appointment:id,date,starts_at', 'doctor.user:id,name'];
 
+    /** @return BelongsTo<Patient, $this> */
     public function patient(): BelongsTo
     {
         return $this->belongsTo(Patient::class);
     }
 
+    /** @return BelongsTo<Doctor, $this> */
     public function doctor(): BelongsTo
     {
         return $this->belongsTo(Doctor::class);
     }
 
+    /** @return BelongsTo<Appointment, $this> */
     public function appointment(): BelongsTo
     {
         return $this->belongsTo(Appointment::class);

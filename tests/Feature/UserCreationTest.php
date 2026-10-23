@@ -25,6 +25,8 @@ test('check if the admin can create doctors', function () {
     ]);
     Specialization::factory(2)->create();
 
+    $lastpage = (int) ceil(Doctor::count() + 1 / 10);
+
     $this->actingAs($user)->get(route('dashboard'))->assertStatus(200);
     $this->post('/doctors', [
         'name' => 'Test2 User',
@@ -35,7 +37,7 @@ test('check if the admin can create doctors', function () {
         'profile_image' => null,
         'is_active' => true,
         'specializations' => [1, 2],
-    ])->assertRedirect(route('doctors.index'));
+    ])->assertRedirect(route('doctors.index', ['page' => $lastpage]));
     $this->assertDatabaseHas('users', [
         'name' => 'Test2 User',
         'email' => 'test2@example.com',

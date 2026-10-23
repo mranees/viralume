@@ -10,6 +10,7 @@ enum AppointmentStatus: string
     case COMPLETED = 'completed';
     case NO_SHOW = 'no_show';
 
+    /** @return list<self> */
     public function allowedTransitions(): array
     {
         return match ($this) {

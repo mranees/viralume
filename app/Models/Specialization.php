@@ -14,6 +14,7 @@ class Specialization extends Model
     /** @use HasFactory<SpecializationFactory> */
     use HasFactory;
 
+    /** @return BelongsToMany<Doctor, $this> */
     public function doctors(): BelongsToMany
     {
         return $this->belongsToMany(Doctor::class);

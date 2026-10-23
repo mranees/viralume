@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Patient;
 
+use App\Models\Patient;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -22,10 +23,14 @@ class PatientUpdateFormRequest extends FormRequest
      */
     public function rules(): array
     {
+
+        /** @var Patient $patient */
+        $patient = $this->route('patient');
+
         return [
             // user mdoel fields
             'name' => 'required|string|min:8|max:255',
-            'email' => 'required|email|unique:users,email,'.$this->route('patient')->user_id.'|max:255',
+            'email' => 'required|email|unique:users,email,'.$patient->user_id.'|max:255',
             'phone' => 'required|string|min:8|max:20',
             // patient model fields
             'address' => 'required|string|max:255',

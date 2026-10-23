@@ -24,12 +24,13 @@ class PatientService
         //
     }
 
-    public function index(Request $request)
+    /** @return array<string, mixed> */
+    public function index(Request $request): array
     {
         $page = (int) request('page', 1);
         $key = "doctors:page:{$page}";
         if ($request->search != null) {
-            $patients = Patient::search($request?->search)->paginate(10);
+            $patients = Patient::search($request->search)->paginate(10);
 
             return [
                 'data' => PatientResource::collection($patients->items())->resolve(),
@@ -49,6 +50,7 @@ class PatientService
         return $patients;
     }
 
+    /** @param array<string, mixed> $data */
     public function store(array $data): void
     {
         DB::transaction(function () use ($data) {
@@ -68,6 +70,7 @@ class PatientService
         });
     }
 
+    /** @return array<string, mixed> */
     public function show(Patient $patient): array
     {
         $patientData = new PatientResource($patient)->resolve();
@@ -84,7 +87,8 @@ class PatientService
         ];
     }
 
-    public function update(Patient $patient, array $data)
+    /** @param array<string, mixed> $data */
+    public function update(Patient $patient, array $data): void
     {
         DB::transaction(function () use ($patient, $data) {
 
@@ -100,7 +104,7 @@ class PatientService
         });
     }
 
-    public function delete(Patient $patient)
+    public function delete(Patient $patient): void
     {
         DB::transaction(fn () => $patient->delete());
     }

@@ -2,10 +2,12 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Doctor;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
+/** @mixin Doctor */
 class DoctorResource extends JsonResource
 {
     /**
@@ -15,6 +17,7 @@ class DoctorResource extends JsonResource
      */
     public static $wrap = null;
 
+    /** @return array<string, mixed> */
     public function toArray(Request $request): array
     {
         return [

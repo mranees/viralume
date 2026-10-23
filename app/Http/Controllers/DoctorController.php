@@ -9,7 +9,9 @@ use App\Http\Resources\SpecializationResource;
 use App\Models\Doctor;
 use App\Models\Specialization;
 use App\Services\DoctorService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Response;
 
 class DoctorController extends Controller
 {
@@ -23,7 +25,7 @@ class DoctorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $doctors = $this->doctorService->index($request);
 
@@ -35,7 +37,7 @@ class DoctorController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         $specializations = Specialization::all('id', 'name');
 
@@ -49,7 +51,7 @@ class DoctorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(DoctorStoreFormRequest $request)
+    public function store(DoctorStoreFormRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -63,7 +65,7 @@ class DoctorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Doctor $doctor)
+    public function show(Doctor $doctor): Response
     {
         return inertia('Doctors/show', [
             'doctor' => new DoctorResource($doctor)->resolve(),
@@ -73,7 +75,7 @@ class DoctorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Doctor $doctor)
+    public function edit(Doctor $doctor): Response
     {
         $specializations = SpecializationResource::collection(Specialization::all())->resolve();
 
@@ -86,7 +88,7 @@ class DoctorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(DoctorUpdateFormRequest $request, Doctor $doctor)
+    public function update(DoctorUpdateFormRequest $request, Doctor $doctor): RedirectResponse
     {
         $validated = $request->validated();
         $this->doctorService->update($doctor, $validated);
@@ -97,7 +99,7 @@ class DoctorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Doctor $doctor)
+    public function destroy(Doctor $doctor): RedirectResponse
     {
         $this->doctorService->delete($doctor);
 

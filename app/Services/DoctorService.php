@@ -25,12 +25,13 @@ class DoctorService
         //
     }
 
-    public function index(Request $request)
+    /** @return array<string, mixed> */
+    public function index(Request $request): array
     {
         $page = (int) request('page', 1);
         $key = "doctors:page:{$page}";
         if ($request->search != null) {
-            $doctors = Doctor::search($request?->search)->with('specializations')->paginate(10);
+            $doctors = Doctor::search($request->search)->with('specializations')->paginate(10);
 
             return [
                 'data' => DoctorResource::collection($doctors->items())->resolve(),
@@ -50,6 +51,7 @@ class DoctorService
         return $doctors;
     }
 
+    /** @param array<string, mixed> $data */
     public function store(array $data): void
     {
 
@@ -88,7 +90,8 @@ class DoctorService
 
     }
 
-    public function update(Doctor $doctor, array $data)
+    /** @param array<string, mixed> $data */
+    public function update(Doctor $doctor, array $data): void
     {
 
         $oldPath = $doctor->profile_image;
@@ -139,7 +142,7 @@ class DoctorService
         }
     }
 
-    public function delete(Doctor $doctor)
+    public function delete(Doctor $doctor): void
     {
         if ($doctor->profile_image) {
             Storage::disk('public')->delete($doctor->profile_image);

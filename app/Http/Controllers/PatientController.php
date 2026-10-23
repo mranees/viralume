@@ -7,7 +7,9 @@ use App\Http\Requests\Patient\PatientUpdateFormRequest;
 use App\Http\Resources\PatientResource;
 use App\Models\Patient;
 use App\Services\PatientService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Response;
 
 class PatientController extends Controller
 {
@@ -21,7 +23,7 @@ class PatientController extends Controller
         $this->patientService = $patientService;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $patients = $this->patientService->index($request);
 
@@ -33,7 +35,7 @@ class PatientController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): Response
     {
         return inertia('Patients/create', [
             'patient' => new Patient,
@@ -43,7 +45,7 @@ class PatientController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PatientStoreFormRequest $request)
+    public function store(PatientStoreFormRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -57,7 +59,7 @@ class PatientController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Patient $patient)
+    public function show(Patient $patient): Response
     {
         $patientData = $this->patientService->show($patient);
 
@@ -70,7 +72,7 @@ class PatientController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Patient $patient)
+    public function edit(Patient $patient): Response
     {
         return inertia('Patients/edit', [
             'patient' => new PatientResource($patient)->resolve(),
@@ -80,7 +82,7 @@ class PatientController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(PatientUpdateFormRequest $request, Patient $patient)
+    public function update(PatientUpdateFormRequest $request, Patient $patient): RedirectResponse
     {
         $validated = $request->validated();
 
@@ -92,7 +94,7 @@ class PatientController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Patient $patient)
+    public function destroy(Patient $patient): RedirectResponse
     {
         $this->patientService->delete($patient);
 

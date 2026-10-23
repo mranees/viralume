@@ -36,10 +36,10 @@ class AppointmentFactory extends Factory
         $startCarbon = Carbon::parse($date.' '.$startTime);
         $endTime = $startCarbon->copy()->addMinutes(30)->format('H:i');
 
-        $doctor = fake()->randomElement(Doctor::all('id', 'vizita_price'));
+        $doctor = fake()->randomElement(Doctor::query()->get(['id', 'vizita_price']));
 
         return [
-            'patient_id' => fake()->randomElement(Patient::all()->pluck('id')),
+            'patient_id' => fake()->randomElement(Patient::query()->pluck('id')),
             'doctor_id' => $doctor['id'],
             'booked_by_id' => fake()->randomElement(User::where('role', 'receptionist')->get()->pluck('id')),
             'date' => $date,

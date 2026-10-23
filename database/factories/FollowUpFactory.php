@@ -21,9 +21,9 @@ class FollowUpFactory extends Factory
     public function definition(): array
     {
         return [
-            'patient_id' => fake()->randomElement(Patient::all()->pluck('id')),
-            'doctor_id' => fake()->randomElement(Doctor::all()->pluck('id')),
-            'appointment_id' => fake()->randomElement(Appointment::all()->pluck('id')),
+            'patient_id' => fake()->randomElement(Patient::query()->pluck('id')),
+            'doctor_id' => fake()->randomElement(Doctor::query()->pluck('id')),
+            'appointment_id' => fake()->randomElement(Appointment::query()->pluck('id')),
             'notes' => fake()->text(150),
         ];
     }

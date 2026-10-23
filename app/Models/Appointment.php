@@ -17,8 +17,6 @@ class Appointment extends Model
     /** @use HasFactory<AppointmentFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $with = ['patient.user:id,name', 'doctor.user:id,name', 'bookedBy:id,name'];
-
     protected function casts(): array
     {
         return [
@@ -28,21 +26,25 @@ class Appointment extends Model
         ];
     }
 
+    /** @return BelongsTo<Patient, $this> */
     public function patient(): BelongsTo
     {
-        return $this->belongsTo(user::class, 'patient_id');
+        return $this->belongsTo(Patient::class, 'patient_id');
     }
 
+    /** @return BelongsTo<Doctor, $this> */
     public function doctor(): BelongsTo
     {
-        return $this->belongsTo(user::class, 'doctor_id');
+        return $this->belongsTo(Doctor::class, 'doctor_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function bookedBy(): BelongsTo
     {
-        return $this->belongsTo(user::class, 'booked_by_id');
+        return $this->belongsTo(User::class, 'booked_by_id');
     }
 
+    /** @return HasOne<FollowUp, $this> */
     public function followUp(): HasOne
     {
         return $this->hasOne(FollowUp::class);

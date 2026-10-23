@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Database\Factories\DoctorFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -38,36 +39,46 @@ class Doctor extends Model
         });
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** @return BelongsToMany<Specialization, $this> */
     public function specializations(): BelongsToMany
     {
         return $this->belongsToMany(Specialization::class);
     }
 
+    /** @return HasMany<DoctorSchedule, $this> */
     public function schedules(): HasMany
     {
         return $this->hasMany(DoctorSchedule::class);
     }
 
+    /** @return HasMany<DoctorTimeOff, $this> */
     public function timeOffs(): HasMany
     {
         return $this->hasMany(DoctorTimeOff::class);
     }
 
+    /** @return HasMany<Appointment, $this> */
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
     }
 
+    /** @return HasMany<FollowUp, $this> */
     public function followUps(): HasMany
     {
         return $this->hasMany(FollowUp::class);
     }
 
+    /**
+     * @param  Builder<Doctor>  $query
+     * @return Builder<Doctor>
+     */
     public function scopeSearch(Builder $query, ?string $search): Builder
     {
         return $query->when($search, fn ($query, $search) => $query->whereHas('user', fn ($q) => $q->where('name', 'like', '%'.$search.'%')
@@ -75,23 +86,36 @@ class Doctor extends Model
             ->orWhere('phone', 'like', '%'.$search.'%')));
     }
 
-    public function scopeIsActive(Builder $query): void
+    /**
+     * @param  Builder<Doctor>  $query
+     * @return Builder<Doctor>
+     */
+    public function scopeIsActive(Builder $query): Builder
     {
-        $query->where('is_active', true);
+        return $query->where('is_active', true);
     }
 
-    public function scopeSchedulesForDay(Doctor $doctor, Carbon $date)
+    /**
+     * @return Collection<int, DoctorSchedule>
+     */
+    public function schedulesForDay(Carbon $date): Collection
     {
-        return $doctor->schedules()->whereDate('date', $date)->get();
+        return $this->schedules()->whereDate('date', $date)->get();
     }
 
-    public function scopeAppointmentsForDay(Doctor $doctor, Carbon $date)
+    /**
+     * @return Collection<int, Appointment>
+     */
+    public function appointmentsForDay(Carbon $date): Collection
     {
-        return $doctor->appointments()->whereDate('date', $date)->get();
+        return $this->appointments()->whereDate('date', $date)->get();
     }
 
-    public function scopeTimeOffsForDay(Doctor $doctor, Carbon $date)
+    /**
+     * @return Collection<int, DoctorTimeOff>
+     */
+    public function timeOffsForDay(Carbon $date): Collection
     {
-        return $doctor->timeOffs()->whereDate('date', $date)->get();
+        return $this->timeOffs()->whereDate('date', $date)->get();
     }
 }
