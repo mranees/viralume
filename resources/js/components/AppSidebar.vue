@@ -2,6 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import {
     BookOpen,
+    FolderBookmark,
     FolderGit2,
     LayoutGrid,
     UserRoundKey,
@@ -38,6 +39,11 @@ const mainNavItems: NavItem[] = [
         title: 'Patients',
         href: '/patients',
         icon: Users,
+    },
+    {
+        title: 'Specializations',
+        href: '/specializations',
+        icon: FolderBookmark,
     },
 ];
 

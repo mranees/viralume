@@ -19,7 +19,7 @@ import {
 import Button from '@/components/ui/button/Button.vue';
 import ConfirmDeleteDialog from '@/components/ConfirmDeleteDialog.vue';
 import Input from '@/components/ui/input/Input.vue';
-import { Eye, Pencil, Plus, Search, Trash } from '@lucide/vue';
+import { Eye, Pencil, Plus, Search, Trash, X } from '@lucide/vue';
 import { ref, watch } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import doctorsroute from '@/routes/doctors';
@@ -95,7 +95,9 @@ const confirmDelete = (doctorId: number) => {
     />
     <div class="mx-8 my-2 flex justify-between">
         <div class="flex items-center gap-2">
-            <Input v-model="search" placeholder="Search..." /><Search />
+            <Input v-model="search" placeholder="Search..." />
+            <div class="flex -ms-10" v-if="search"><X @click="search=null" class="cursor-pointer" /></div>
+            <div class="flex -ms-10" v-else><Search /></div>
         </div>
         <div class="flex">
             <Link href="doctors/create"

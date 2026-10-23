@@ -31,7 +31,7 @@ class DoctorService
         $page = (int) request('page', 1);
         $key = "doctors:page:{$page}";
         if ($request->search != null) {
-            $doctors = Doctor::search($request->search)->with('specializations')->paginate(10);
+            $doctors = Doctor::search($request->search)->with('specializations:id,name')->paginate(10);
 
             return [
                 'data' => DoctorResource::collection($doctors->items())->resolve(),
@@ -39,7 +39,7 @@ class DoctorService
             ];
         } else {
             $doctors = Cache::tags('doctors.index')->remember($key, 5, function () {
-                $paginated = Doctor::with('specializations')->paginate(10);
+                $paginated = Doctor::with('specializations:id,name')->paginate(10);
 
                 return [
                     'data' => DoctorResource::collection($paginated->items())->resolve(),

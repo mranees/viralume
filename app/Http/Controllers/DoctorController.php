@@ -15,6 +15,7 @@ use Inertia\Response;
 
 class DoctorController extends Controller
 {
+
     protected DoctorService $doctorService;
 
     public function __construct(DoctorService $doctorService)
