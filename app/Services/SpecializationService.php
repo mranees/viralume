@@ -3,11 +3,8 @@
 namespace App\Services;
 
 use App\Concerns\UseMetaPagination;
-use App\Enum\UsersRoles;
-use App\Http\Resources\FollowUpResource;
 use App\Http\Resources\SpecializationResource;
 use App\Models\Specialization;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;

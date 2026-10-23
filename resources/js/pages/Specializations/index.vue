@@ -52,7 +52,11 @@ watch(search, (value) => {
         router.get(
             '/specializations',
             { search: value },
-            { preserveState: true, preserveScroll: true, only: ['specializations'] },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                only: ['specializations'],
+            },
         );
     }, 500);
 });
@@ -61,7 +65,11 @@ function goToPage(page: any) {
     router.get(
         '/specializations',
         { page },
-        { preserveState: true, preserveScroll: true, only: ['specializations'] },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            only: ['specializations'],
+        },
     );
 }
 
@@ -95,8 +103,10 @@ const confirmDelete = (specializationId: number) => {
     <div class="mx-8 my-2 flex justify-between">
         <div class="flex items-center gap-2">
             <Input v-model="search" placeholder="Search..." />
-            <div class="flex -ms-10" v-if="search"><X @click="search=null" class="cursor-pointer" /></div>
-            <div class="flex -ms-10" v-else><Search /></div>
+            <div class="-ms-10 flex" v-if="search">
+                <X @click="search = null" class="cursor-pointer" />
+            </div>
+            <div class="-ms-10 flex" v-else><Search /></div>
         </div>
         <div class="flex">
             <Link href="specializations/create"
@@ -107,7 +117,8 @@ const confirmDelete = (specializationId: number) => {
     <div class="m-8 flex justify-center">
         <Table class="w-full">
             <TableCaption
-                >Show {{ specializations.meta.from }} to {{ specializations.meta.to }} of
+                >Show {{ specializations.meta.from }} to
+                {{ specializations.meta.to }} of
                 {{ specializations.meta.total }}.</TableCaption
             >
             <TableHeader>
@@ -122,13 +133,21 @@ const confirmDelete = (specializationId: number) => {
                     v-for="specialization in specializations.data"
                     :key="'specialization-' + specialization.id"
                 >
-                    <TableCell class="w-[15%]">{{ specialization.name }}</TableCell>
-                    <TableCell class="">{{ specialization.description }}</TableCell>
+                    <TableCell class="w-[15%]">{{
+                        specialization.name
+                    }}</TableCell>
+                    <TableCell class="">{{
+                        specialization.description
+                    }}</TableCell>
                     <TableCell class="flex justify-center gap-2 text-white">
-                        <Link :href="specializationsroute.show(specialization.id)" alt="Show"
+                        <Link
+                            :href="specializationsroute.show(specialization.id)"
+                            alt="Show"
                             ><Eye class="text-blue-500 hover:text-blue-700"
                         /></Link>
-                        <Link :href="specializationsroute.edit(specialization.id)" alt="Edit"
+                        <Link
+                            :href="specializationsroute.edit(specialization.id)"
+                            alt="Edit"
                             ><Pencil
                                 class="text-green-500 hover:text-green-700"
                         /></Link>

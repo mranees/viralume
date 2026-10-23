@@ -95,8 +95,10 @@ const confirmDelete = (patientId: number) => {
     <div class="mx-8 my-2 flex justify-between">
         <div class="flex items-center gap-2">
             <Input v-model="search" placeholder="Search..." />
-            <div class="flex -ms-10" v-if="search"><X @click="search=null" class="cursor-pointer" /></div>
-            <div class="flex -ms-10" v-else><Search /></div>
+            <div class="-ms-10 flex" v-if="search">
+                <X @click="search = null" class="cursor-pointer" />
+            </div>
+            <div class="-ms-10 flex" v-else><Search /></div>
         </div>
         <div class="flex">
             <Link href="patients/create"

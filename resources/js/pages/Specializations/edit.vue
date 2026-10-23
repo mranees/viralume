@@ -50,7 +50,9 @@ defineOptions({
         <div class="my-4 w-1/2 text-center">
             <Card>
                 <Form
-                    v-bind="specializations.update.form(props.specialization.id)"
+                    v-bind="
+                        specializations.update.form(props.specialization.id)
+                    "
                     v-slot="{ errors, processing }"
                 >
                     <div class="ms-4 flex w-full justify-start">
@@ -63,7 +65,7 @@ defineOptions({
                     <h1 class="my-4">
                         Edit Specialization "{{ props.specialization.name }}"
                     </h1>
-                    <div class="flex flex-col justify-between p-4 gap-2">
+                    <div class="flex flex-col justify-between gap-2 p-4">
                         <div class="flex w-full flex-col gap-2">
                             <Label for="name">Name:</Label>
                             <Input
@@ -76,11 +78,11 @@ defineOptions({
                         <div class="flex w-full flex-col gap-2">
                             <Label for="email">Description:</Label>
                             <Textarea
-                            id="description"
-                            name="description"
-                            v-model="fields.description"
-                            placeholder="Specialization Short Description"
-                        />
+                                id="description"
+                                name="description"
+                                v-model="fields.description"
+                                placeholder="Specialization Short Description"
+                            />
                             <InputError :message="errors.description" />
                         </div>
                     </div>
