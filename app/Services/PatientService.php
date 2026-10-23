@@ -28,7 +28,7 @@ class PatientService
     public function index(Request $request): array
     {
         $page = (int) request('page', 1);
-        $key = "doctors:page:{$page}";
+        $key = "patients:page:{$page}";
         if ($request->search != null) {
             $patients = Patient::search($request->search)->paginate(10);
 

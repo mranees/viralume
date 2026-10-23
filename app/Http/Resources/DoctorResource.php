@@ -25,7 +25,7 @@ class DoctorResource extends JsonResource
             'name' => $this->whenLoaded('user', fn () => $this->user->name),
             'email' => $this->whenLoaded('user', fn () => $this->user->email),
             'phone' => $this->whenLoaded('user', fn () => $this->user->phone),
-            'specializations' => SpecializationResource::collection($this->specializations)->resolve(),
+            'specializations' => SpecializationResource::collection($this->whenLoaded('specializations'))->resolve(),
             'bio' => $this->bio,
             'vizita_price' => $this->vizita_price,
             'profile_image' => $this->profile_image ? Storage::disk('public')->url($this->profile_image) : null,
