@@ -3,7 +3,7 @@ import { usePage } from '@inertiajs/vue3';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 
 const appname = usePage().props.name;
-defineProps<{ name: string }>();
+defineProps<{ name: string; slogan?: string }>();
 </script>
 
 <template>
@@ -13,8 +13,11 @@ defineProps<{ name: string }>();
         <AppLogoIcon class="size-5 fill-current text-white dark:text-black" />
     </div>
     <div class="ml-1 grid flex-1 text-left text-sm">
-        <span class="mb-0.5 truncate leading-tight font-semibold">{{
-            name
-        }}</span>
+        <span class="mb-0.5 truncate leading-tight font-semibold">
+            {{ name }}
+        </span>
+        <span class="mb-0.5 truncate text-[12px] leading-tight">
+            {{ slogan }}
+        </span>
     </div>
 </template>

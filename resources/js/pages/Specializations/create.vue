@@ -19,7 +19,7 @@ defineOptions({
         breadcrumbs: [
             {
                 title: 'Dashboard',
-                href: '/',
+                href: '/dashboard',
             },
             {
                 title: 'Specializations',

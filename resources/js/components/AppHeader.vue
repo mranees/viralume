@@ -147,7 +147,10 @@ const rightNavItems: NavItem[] = [
                 </div>
 
                 <Link :href="dashboard()" class="flex items-center gap-x-2">
-                    <AppLogo name="Viralume" />
+                    <AppLogo
+                        name="Viralume"
+                        slogan="Clicnic Management System"
+                    />
                 </Link>
 
                 <!-- Desktop Menu -->
